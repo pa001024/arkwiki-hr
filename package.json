@@ -1,9 +1,12 @@
 {
-  "name": "wiki-hr",
+  "name": "@arkwiki/hr",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "keywords": [],
+  "description": "arknights",
+  "main": "src/index.ts",
+  "private": true,
+  "keywords": [
+    "arknights"
+  ],
   "author": "",
   "license": "ISC",
   "scripts": {
@@ -11,13 +14,16 @@
     "build": "parcel build index.html"
   },
   "dependencies": {
+    "animejs": "^3.1.0",
     "vue": "^2.6.10",
     "vue-hot-reload-api": "^2.3.3",
+    "vue-lottie": "^0.2.1",
     "vue-property-decorator": "^8.2.1"
   },
   "devDependencies": {
     "@babel/core": "^7.5.5",
     "@babel/preset-env": "^7.5.5",
+    "@types/animejs": "^2.0.2",
     "@vue/component-compiler-utils": "^3.0.0",
     "less": "^3.9.0",
     "parcel-bundler": "^1.12.3",
