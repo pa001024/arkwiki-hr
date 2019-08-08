@@ -1,64 +1,81 @@
 
 <template>
   <div class="selector">
-    <div class="header">
+    <div class="filter">
       <div class="filter-part genders">
         <div class="title">性别</div>
-        <Options :names="names.genders" v-model="filters.genders"></Options>
+        <Options :names="selectedNames.genders" v-model="filters.genders"></Options>
       </div>
       <div class="filter-part professions">
         <div class="title">职业</div>
-        <Options :names="names.professions" v-model="filters.professions" v-slot="{ name }">
-          <i :class="['chari-'+name.icon]"></i>
-          {{name.name}}
+        <Options :names="selectedNames.professions" v-model="filters.professions" v-slot="{ item }">
+          <i :class="['chari-'+$mapIcon(item)]"></i>
+          {{item}}
         </Options>
       </div>
       <div class="filter-part tags">
         <div class="title">标签</div>
-        <Options :names="names.tags" v-model="filters.tags"></Options>
+        <Options :names="selectedNames.tags" v-model="filters.tags"></Options>
+      </div>
+      <div class="filter-part rairties">
+        <div class="title">资历</div>
+        <Options :names="selectedNames.rairties" v-model="filters.rairties"></Options>
+      </div>
+      <div class="filter-part methods">
+        <div class="title">方式</div>
+        <Options :names="selectedNames.methods" v-model="filters.methods"></Options>
+      </div>
+      <div class="filter-part tools">
+        <div class="title">操作</div>
+        <div class="tool" @click="reset">重置</div>
       </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { Vue, Component, Watch, Prop } from 'vue-property-decorator';
+import { Vue, Component, Model } from 'vue-property-decorator';
 import Options from './Options.vue';
+import { mapValues } from 'lodash';
+import { HRFilter } from '../common/hr.i';
 
 @Component({ components: { Options } })
 export default class Selector extends Vue {
-  filters = {
-    genders: [],
-    professions: [],
-    tags: [],
-    rairties: [],
-  };
-  names = {
+  @Model('change') _filter: HRFilter;
+  get filters() {
+    return this._filter;
+  }
+  set filters(val) {
+    this.$emit('change', val);
+  }
+  names: HRFilter = {
     genders: ['男', '女'],
-    /** 职业 */
-    professions: [
-      { name: '辅助', icon: 'support' },
-      { name: '近卫', icon: 'warrior' },
-      { name: '狙击', icon: 'sniper' },
-      { name: '术师', icon: 'caster' },
-      { name: '特种', icon: 'special' },
-      { name: '先锋', icon: 'pioneer' },
-      { name: '医疗', icon: 'medic' },
-      { name: '重装', icon: 'tank' },
-    ],
+    locations: ['近战位', '远程位'],
+    professions: ['辅助', '近卫', '狙击', '术师', '特种', '先锋', '医疗', '重装'],
     tags: ['输出', '防护', '生存', '治疗', '费用回复', '群攻', '减速', '支援', '快速复活', '削弱', '位移', '召唤', '控场', '爆发'],
     rairties: ['新手', '资深干员', '高级资深干员'],
+    methods: ['公开招募', '干员寻访'],
   };
 
-  reset() {}
-  swtichOption(key: string, val: string) {}
+  get selectedNames() {
+    return mapValues(this.names, (v, n: keyof HRFilter) => {
+      const selected = this.filters[n];
+      return [...v.filter(s => selected.includes(s)), ...v.filter(s => !selected.includes(s))];
+    });
+  }
+
+  reset() {
+    this.filters = mapValues(this.filters, v => []);
+  }
 }
 </script>
 
 <style lang="less" scoped>
 .selector {
   position: relative;
-  overflow: hidden;
+  background: rgba(21, 33, 40, 0.2);
+  // overflow: hidden;
+  border-radius: 8px;
   &::before {
     content: '';
     position: absolute;
@@ -75,10 +92,13 @@ export default class Selector extends Vue {
 }
 .filter-part {
   display: flex;
+  align-items: center;
   color: #fff;
+  white-space: nowrap;
+  padding: 8px 0;
   .title {
     display: flex;
-    padding: 24px 40px 24px 24px;
+    padding: 24px;
     flex-direction: column;
     // background-color: #213a52;
     // background-image: linear-gradient(207deg, #223a53, #142637);
@@ -88,6 +108,31 @@ export default class Selector extends Vue {
     letter-spacing: 0.02em;
     text-decoration: none;
     text-transform: uppercase;
+  }
+  & + & {
+    border-top: 1px solid #fff;
+  }
+}
+.tool {
+  display: flex;
+  align-items: center;
+  padding: 6px 16px;
+  height: 16px;
+  margin: 4px;
+  font-size: 14px;
+  white-space: nowrap;
+  vertical-align: middle;
+  touch-action: manipulation;
+  cursor: pointer;
+  user-select: none;
+  background-image: none;
+  border: 2px solid #d72626;
+  border-radius: 24px;
+  color: #d72626;
+  // background-color: #161a1e;
+  transition: 0.4s;
+  &:hover {
+    background-color: #36404b62;
   }
 }
 </style>

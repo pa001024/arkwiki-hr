@@ -1,55 +1,59 @@
 <template>
-  <div class="options-group">
+  <transition-group tag="div" class="options-group" name="options-list">
     <label
+      v-for="name in names"
+      :key="name"
       role="checkbox"
       class="option"
       :class="{ selected: vals.includes(name) }"
-      v-for="name in names"
-      :key="name"
     >
       <input type="checkbox" v-model="vals" :value="name" />
       <span>
-        <slot>{{name}}</slot>
+        <slot :item="name">{{name}}</slot>
       </span>
     </label>
-  </div>
+  </transition-group>
 </template>
 <script lang="ts">
 import { Vue, Component, Watch, Prop, Model } from 'vue-property-decorator';
 
 @Component({})
 export default class Options extends Vue {
-  @Model() vals: string[];
+  @Model('change') _vals: string[];
+  get vals() {
+    return this._vals;
+  }
+  set vals(val) {
+    this.$emit('change', val);
+  }
   @Prop() names: string[];
 }
 </script>
 <style lang="less" scoped>
 .options-group {
   display: flex;
+  flex-wrap: wrap;
 }
 .option {
   display: flex;
-  justify-content: center;
   align-items: center;
   padding: 6px 16px;
-  margin: 12px 0;
+  height: 16px;
+  margin: 4px;
   font-size: 14px;
-  font-weight: normal;
-  line-height: 1.42857143;
-  text-align: center;
   white-space: nowrap;
   vertical-align: middle;
   touch-action: manipulation;
   cursor: pointer;
   user-select: none;
   background-image: none;
-  border: 1px solid transparent;
-  border-radius: 4px;
+  border: 2px solid #fff;
+  border-radius: 24px;
   color: #fff;
   // background-color: #161a1e;
-  transition: 0.4s background-color;
+  transition: 0.4s;
   &:hover {
-    background-color: #36404b;
+    background-color: #36404b62;
   }
   input {
     opacity: 0;
@@ -58,8 +62,12 @@ export default class Options extends Vue {
     z-index: -1;
   }
   &.selected {
-    background-color: #a7a5a5;
+    border-color: #08cc96;
+    color: #08cc96;
   }
+}
+.options-list-move {
+  transition: 0.4s;
 }
 </style>
 
