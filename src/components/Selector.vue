@@ -36,7 +36,7 @@
 <script lang="ts">
 import { Vue, Component, Model } from 'vue-property-decorator';
 import Options from './Options.vue';
-import { mapValues } from 'lodash';
+import mapValues from 'lodash.mapvalues';
 import { HRFilter } from '../common/hr.i';
 
 @Component({ components: { Options } })
@@ -60,7 +60,7 @@ export default class Selector extends Vue {
   get selectedNames() {
     return mapValues(this.names, (v, n: keyof HRFilter) => {
       const selected = this.filters[n];
-      return [...v.filter(s => selected.includes(s)), ...v.filter(s => !selected.includes(s))];
+      return [...selected.filter(s => v.includes(s)), ...v.filter(s => !selected.includes(s))];
     });
   }
 
@@ -73,9 +73,7 @@ export default class Selector extends Vue {
 <style lang="less" scoped>
 .selector {
   position: relative;
-  background: rgba(21, 33, 40, 0.2);
   // overflow: hidden;
-  border-radius: 8px;
   &::before {
     content: '';
     position: absolute;
@@ -83,7 +81,7 @@ export default class Selector extends Vue {
     left: 0;
     width: 100%;
     height: 100%;
-    background: url(../../public/bg_0_rhodes2.png) no-repeat center;
+    // background: url(../../public/bg_0_rhodes2.png) no-repeat center;
     background-size: cover;
     filter: blur(5px);
     z-index: -1;
@@ -95,29 +93,37 @@ export default class Selector extends Vue {
   align-items: center;
   color: #fff;
   white-space: nowrap;
-  padding: 8px 0;
+  margin: 4px 0;
+  min-height: 80px;
+  background-image: linear-gradient(19deg, #293031 0%, #33373f 100%);
   .title {
     display: flex;
-    padding: 24px;
+    padding: 12px 24px;
     flex-direction: column;
     // background-color: #213a52;
     // background-image: linear-gradient(207deg, #223a53, #142637);
     color: #fff;
-    font-size: 18px;
-    line-height: 26px;
+    font-size: 16px;
     letter-spacing: 0.02em;
     text-decoration: none;
     text-transform: uppercase;
-  }
-  & + & {
-    border-top: 1px solid #fff;
+    &::after {
+      content: '';
+      position: absolute;
+      display: inline-block;
+      width: 36px;
+      height: 36px;
+      border: 3px solid #fff;
+      transform: rotate(45deg) translate(-10px, -3px);
+    }
   }
 }
 .tool {
   display: flex;
   align-items: center;
   padding: 6px 16px;
-  height: 16px;
+  box-sizing: border-box;
+  height: 32px;
   margin: 4px;
   font-size: 14px;
   white-space: nowrap;
@@ -127,7 +133,6 @@ export default class Selector extends Vue {
   user-select: none;
   background-image: none;
   border: 2px solid #d72626;
-  border-radius: 24px;
   color: #d72626;
   // background-color: #161a1e;
   transition: 0.4s;

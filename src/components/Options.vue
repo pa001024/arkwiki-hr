@@ -30,15 +30,22 @@ export default class Options extends Vue {
 }
 </script>
 <style lang="less" scoped>
+@main-color: #2567e2;
+@text-color: #fff;
+// @text-color: #302f2f;
+// @main-color: #08cc96;
+
 .options-group {
   display: flex;
   flex-wrap: wrap;
+  margin: 4px 0;
 }
 .option {
   display: flex;
   align-items: center;
   padding: 6px 16px;
-  height: 16px;
+  box-sizing: border-box;
+  height: 32px;
   margin: 4px;
   font-size: 14px;
   white-space: nowrap;
@@ -47,13 +54,12 @@ export default class Options extends Vue {
   cursor: pointer;
   user-select: none;
   background-image: none;
-  border: 2px solid #fff;
-  border-radius: 24px;
-  color: #fff;
+  border: 2px solid @text-color;
+  color: @text-color;
   // background-color: #161a1e;
   transition: 0.4s;
   &:hover {
-    background-color: #36404b62;
+    background-color: #36404b38;
   }
   input {
     opacity: 0;
@@ -62,8 +68,17 @@ export default class Options extends Vue {
     z-index: -1;
   }
   &.selected {
-    border-color: #08cc96;
-    color: #08cc96;
+    border-color: @main-color;
+    color: @main-color;
+    background-color: #e2e2e2;
+    &::before {
+      content: '';
+      display: inline-block;
+      width: 4px;
+      height: 5px;
+      background: @main-color;
+      margin: 0 6px 12px -10px;
+    }
   }
 }
 .options-list-move {
