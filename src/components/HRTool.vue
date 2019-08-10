@@ -2,8 +2,8 @@
 <template>
   <div class="hr">
     <div class="header">
-      <CharSelector v-model="filters"></CharSelector>
-      <HRResult :results="filteredChars"></HRResult>
+      <CharSelector v-model="filters" @evolve="e => evolve = e"></CharSelector>
+      <HRResult :results="filteredChars" :evolve="evolve"></HRResult>
     </div>
   </div>
 </template>
@@ -29,6 +29,8 @@ export default class HRTool extends Vue {
   get filteredChars() {
     return this.hr.filterChars(this.filters).sort((a, b) => b.r - a.r || a.name.localeCompare(b.name));
   }
+
+  evolve = 0;
 }
 </script>
 

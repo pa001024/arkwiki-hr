@@ -6,7 +6,7 @@
       </transition-group>
       <div class="header">
         <span class="pro">
-          <CharIcon :name="char.job"></CharIcon>
+          <ArkIcon :name="char.job"></ArkIcon>
         </span>
         <Rarity :star="char.r"></Rarity>
       </div>
@@ -24,16 +24,41 @@
 import { Vue, Component, Watch, Prop, Model } from 'vue-property-decorator';
 import { HRInfo } from '../common/hr.i';
 import Rarity from './Rarity.vue';
-import CharIcon from './CharIcon.vue';
+import ArkIcon from './ArkIcon.vue';
 import WikiImage from './WikiImage.vue';
 import { wikiImageUrl } from '../common/api';
 
-@Component({ components: { Rarity, WikiImage, CharIcon } })
+@Component({ components: { Rarity, WikiImage, ArkIcon } })
 export default class CharPortrait extends Vue {
   @Model('change') _phase: number;
   @Prop() char: HRInfo;
+  @Prop() initEvolve: number;
 
   iphase = 0;
+
+  @Watch('initEvolve')
+  changeEvolve() {
+    if (this.char.pic.length > 1) {
+      switch (this.initEvolve) {
+        case 0:
+          this.iphase = 0;
+          break;
+        case 1:
+          const phase1 = this.char.pic.findIndex(v => /-2\.png/.test(v));
+          if (phase1 != -1) this.iphase = phase1;
+          else this.iphase = 0;
+          break;
+        case 2:
+          const phase2 = this.char.pic.findIndex(v => /-3\.png/.test(v));
+          if (phase2 != -1) this.iphase = phase2;
+          break;
+        case 3:
+          const skin = this.char.pic.findIndex(v => /-.+?-\d\./.test(v));
+          if (skin != -1) this.iphase = skin;
+          break;
+      }
+    }
+  }
 
   get phase() {
     if (typeof this._phase === 'undefined') return this.iphase;

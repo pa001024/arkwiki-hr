@@ -1,15 +1,15 @@
 <template>
-  <i class="chari" :class="['chari-'+icon]"></i>
+  <i class="arkicon" :class="['arkicon-'+icon]"></i>
 </template>
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator';
 import { JobIcons } from '../common/icon';
 
 @Component({ components: {} })
-export default class CharIcon extends Vue {
+export default class ArkIcon extends Vue {
   @Prop() name: string;
   get icon() {
-    return JobIcons[this.name];
+    return JobIcons[this.name] || this.name;
   }
 }
 </script>

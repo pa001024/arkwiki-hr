@@ -13,7 +13,7 @@
           <span>职业</span>
         </div>
         <Options :names="selectedNames.professions" v-model="filters.professions" v-slot="{ item }">
-          <CharIcon :name="item"></CharIcon>
+          <ArkIcon :name="item"></ArkIcon>
           {{item}}
         </Options>
       </div>
@@ -39,9 +39,18 @@
         <div class="title">
           <span>操作</span>
         </div>
-        <div class="tool" @click="reset">重置</div>
-        <div class="tool" @click="evolve">
+        <div class="tool red" @click="reset">重置</div>
+        <div class="tool" @click="$emit('evolve', 0)">
+          <WikiImage name="精英初始.png" :size="20"></WikiImage>
+        </div>
+        <div class="tool" @click="$emit('evolve', 1)">
+          <WikiImage name="精英阶段1.png" :size="20"></WikiImage>
+        </div>
+        <div class="tool" @click="$emit('evolve', 2)">
           <WikiImage name="精英阶段2.png" :size="20"></WikiImage>
+        </div>
+        <div class="tool" @click="$emit('evolve', 3)">
+          <ArkIcon name="skin"></ArkIcon>
         </div>
       </div>
     </div>
@@ -53,10 +62,10 @@ import { Vue, Component, Model } from 'vue-property-decorator';
 import mapValues from 'lodash.mapvalues';
 import { HRFilter } from '../common/hr.i';
 import Options from './Options.vue';
-import CharIcon from './CharIcon.vue';
+import ArkIcon from './ArkIcon.vue';
 import WikiImage from './WikiImage.vue';
 
-@Component({ components: { Options, CharIcon, WikiImage } })
+@Component({ components: { Options, ArkIcon, WikiImage } })
 export default class Selector extends Vue {
   @Model('change') _filter: HRFilter;
   get filters() {
@@ -84,10 +93,6 @@ export default class Selector extends Vue {
   reset() {
     this.filters = mapValues(this.filters, v => []);
   }
-
-  evolve() {
-    // TODO: 全体精二
-  }
 }
 </script>
 
@@ -95,19 +100,18 @@ export default class Selector extends Vue {
 .selector {
   position: relative;
   // overflow: hidden;
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    // background: url(../../public/bg_0_rhodes2.png) no-repeat center;
-    background-size: cover;
-    filter: blur(5px);
-    z-index: -1;
-    background-size: cover;
-  }
+  // &::before {
+  //   content: '';
+  //   position: absolute;
+  //   top: 0;
+  //   left: 0;
+  //   width: 100%;
+  //   height: 100%;
+  //   // background: url(../../public/bg_0_rhodes2.png) no-repeat center;
+  //   // background-size: cover;
+  //   filter: blur(5px);
+  //   z-index: -1;
+  // }
 }
 .filter-part {
   display: flex;
@@ -165,12 +169,16 @@ export default class Selector extends Vue {
   cursor: pointer;
   user-select: none;
   background-image: none;
-  border: 2px solid #d72626;
-  color: #d72626;
+  border: 2px solid #fff;
+  color: #fff;
   // background-color: #161a1e;
   transition: 0.4s;
   &:hover {
     background-color: #36404b62;
+  }
+  &.red {
+    border: 2px solid #d72626;
+    color: #d72626;
   }
 }
 </style>

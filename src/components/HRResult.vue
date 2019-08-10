@@ -8,17 +8,18 @@
         {{char.job}}
       </div>
     </div>-->
-    <CharPortrait class="result-item" :char="char" v-for="char in results" :key="char.name"></CharPortrait>
+    <CharPortrait :initEvolve="evolve" class="result-item" :char="char" v-for="char in results" :key="char.name"></CharPortrait>
   </transition-group>
 </template>
 
 <script lang="ts">
-import { Vue, Component, Watch, Prop } from 'vue-property-decorator';
+import { Vue, Component, Watch, Prop, Model } from 'vue-property-decorator';
 import { HRInfo } from '../common/hr.i';
 import CharPortrait from './CharPortrait.vue';
 
 @Component({ components: { CharPortrait } })
 export default class HRResult extends Vue {
+  @Prop() evolve: number;
   @Prop() results: HRInfo[];
 }
 </script>
