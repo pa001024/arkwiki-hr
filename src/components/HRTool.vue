@@ -27,7 +27,7 @@ export default class HRTool extends Vue {
   };
   hr = new HRSystem();
   get filteredChars() {
-    return this.hr.filterChars(this.filters).sort((a, b) => b.star - a.star || a.name.localeCompare(b.name));
+    return this.hr.filterChars(this.filters).sort((a, b) => b.r - a.r || a.name.localeCompare(b.name));
   }
 }
 </script>

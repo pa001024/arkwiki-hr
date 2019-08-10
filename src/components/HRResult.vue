@@ -1,7 +1,7 @@
 <template>
   <transition-group tag="div" class="hr-result" name="hr-list">
     <!-- <div class="char" v-for="char in results" :key="char.name">
-      <div class="stars">{{"★".repeat(char.star)}}</div>
+      <div class="stars">{{"★".repeat(char.r)}}</div>
       <div class="name">{{char.name}}</div>
       <div class="pro">
         <i :class="['chari-'+$mapIcon(char.job)]"></i>

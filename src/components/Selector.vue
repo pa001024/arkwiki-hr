@@ -3,31 +3,46 @@
   <div class="selector">
     <div class="filter">
       <div class="filter-part genders">
-        <div class="title">性别</div>
+        <div class="title">
+          <span>性别</span>
+        </div>
         <Options :names="selectedNames.genders" v-model="filters.genders"></Options>
       </div>
       <div class="filter-part professions">
-        <div class="title">职业</div>
+        <div class="title">
+          <span>职业</span>
+        </div>
         <Options :names="selectedNames.professions" v-model="filters.professions" v-slot="{ item }">
-          <i :class="['chari-'+$mapIcon(item)]"></i>
+          <CharIcon :name="item"></CharIcon>
           {{item}}
         </Options>
       </div>
       <div class="filter-part tags">
-        <div class="title">标签</div>
+        <div class="title">
+          <span>标签</span>
+        </div>
         <Options :names="selectedNames.tags" v-model="filters.tags"></Options>
       </div>
       <div class="filter-part rairties">
-        <div class="title">资历</div>
+        <div class="title">
+          <span>资历</span>
+        </div>
         <Options :names="selectedNames.rairties" v-model="filters.rairties"></Options>
       </div>
       <div class="filter-part methods">
-        <div class="title">方式</div>
+        <div class="title">
+          <span>方式</span>
+        </div>
         <Options :names="selectedNames.methods" v-model="filters.methods"></Options>
       </div>
       <div class="filter-part tools">
-        <div class="title">操作</div>
+        <div class="title">
+          <span>操作</span>
+        </div>
         <div class="tool" @click="reset">重置</div>
+        <div class="tool" @click="evolve">
+          <WikiImage name="精英阶段2.png" :size="20"></WikiImage>
+        </div>
       </div>
     </div>
   </div>
@@ -35,11 +50,13 @@
 
 <script lang="ts">
 import { Vue, Component, Model } from 'vue-property-decorator';
-import Options from './Options.vue';
 import mapValues from 'lodash.mapvalues';
 import { HRFilter } from '../common/hr.i';
+import Options from './Options.vue';
+import CharIcon from './CharIcon.vue';
+import WikiImage from './WikiImage.vue';
 
-@Component({ components: { Options } })
+@Component({ components: { Options, CharIcon, WikiImage } })
 export default class Selector extends Vue {
   @Model('change') _filter: HRFilter;
   get filters() {
@@ -53,7 +70,7 @@ export default class Selector extends Vue {
     locations: ['近战位', '远程位'],
     professions: ['辅助', '近卫', '狙击', '术师', '特种', '先锋', '医疗', '重装'],
     tags: ['输出', '防护', '生存', '治疗', '费用回复', '群攻', '减速', '支援', '快速复活', '削弱', '位移', '召唤', '控场', '爆发'],
-    rairties: ['新手', '资深干员', '高级资深干员'],
+    rairties: ['一星干员', '新手', '三星干员', '四星干员', '资深干员', '高级资深干员'],
     methods: ['公开招募', '干员寻访'],
   };
 
@@ -66,6 +83,10 @@ export default class Selector extends Vue {
 
   reset() {
     this.filters = mapValues(this.filters, v => []);
+  }
+
+  evolve() {
+    // TODO: 全体精二
   }
 }
 </script>
@@ -94,12 +115,11 @@ export default class Selector extends Vue {
   color: #fff;
   white-space: nowrap;
   margin: 4px 0;
+  box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.6);
   min-height: 80px;
   background-image: linear-gradient(19deg, #293031 0%, #33373f 100%);
   .title {
-    display: flex;
     padding: 12px 24px;
-    flex-direction: column;
     // background-color: #213a52;
     // background-image: linear-gradient(207deg, #223a53, #142637);
     color: #fff;
@@ -107,14 +127,27 @@ export default class Selector extends Vue {
     letter-spacing: 0.02em;
     text-decoration: none;
     text-transform: uppercase;
-    &::after {
-      content: '';
-      position: absolute;
-      display: inline-block;
+    span {
+      display: flex;
+      align-items: center;
+      justify-content: center;
       width: 36px;
       height: 36px;
-      border: 3px solid #fff;
-      transform: rotate(45deg) translate(-10px, -3px);
+      overflow: hidden;
+      word-break: break-all;
+      white-space: normal;
+      line-height: 16px;
+      text-align: center;
+
+      &::after {
+        content: '';
+        position: absolute;
+        display: inline-block;
+        width: 36px;
+        height: 36px;
+        border: 3px solid #fff;
+        transform: rotate(45deg);
+      }
     }
   }
 }

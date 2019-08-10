@@ -14,10 +14,14 @@ export interface HRLabel {
 
 export interface HRInfo {
   name: string;
+  pic: string[];
+  alt: string;
+  logo: string;
   job: string;
-  star: number;
+  num: string;
+  r: number;
+  pool: number;
   sex: number;
-  pub: number;
-  memo: string;
   tags: string[];
+  desc: string;
 }

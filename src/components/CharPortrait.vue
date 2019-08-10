@@ -1,29 +1,59 @@
 <template>
   <div class="char-portrait-container">
-    <div class="char-portrait" style="background-image: url(../../public/Amiya-1.png)">
+    <div class="char-portrait" @click="phaseLoop()">
+      <transition-group name="flip" tag="div" class="pic" :data-phase="phase">
+        <img v-for="(p, h) in phases" :key="h" v-show="phase === h" :src="getPhase(h)" :alt="p" />
+      </transition-group>
       <div class="header">
         <span class="pro">
-          <i :class="['chari-'+$mapIcon(char.job)]"></i>
+          <CharIcon :name="char.job"></CharIcon>
         </span>
-        <Rarity :star="char.star"></Rarity>
+        <Rarity :star="char.r"></Rarity>
       </div>
-      <div class="mask" :class="['r'+char.star]"></div>
-      <div class="portrait">
-        <img src="../../public/logo_rhodes.png" width="24" />
-        <br />
+      <div class="mask" :class="['r'+char.r]"></div>
+      <div class="misc">
+        <div class="logo">
+          <WikiImage :name="`${char.logo}.png`" :size="24"></WikiImage>
+        </div>
         <span class="name">{{char.name}}</span>
       </div>
     </div>
   </div>
 </template>
 <script lang="ts">
-import { Vue, Component, Watch, Prop } from 'vue-property-decorator';
+import { Vue, Component, Watch, Prop, Model } from 'vue-property-decorator';
 import { HRInfo } from '../common/hr.i';
 import Rarity from './Rarity.vue';
+import CharIcon from './CharIcon.vue';
+import WikiImage from './WikiImage.vue';
+import { wikiImageUrl } from '../common/api';
 
-@Component({ components: { Rarity } })
+@Component({ components: { Rarity, WikiImage, CharIcon } })
 export default class CharPortrait extends Vue {
+  @Model('change') _phase: number;
   @Prop() char: HRInfo;
+
+  iphase = 0;
+
+  get phase() {
+    if (typeof this._phase === 'undefined') return this.iphase;
+    return this._phase;
+  }
+  set phase(val) {
+    if (typeof this._phase === 'undefined') this.iphase = val;
+    this.$emit('change', val);
+  }
+
+  getPhase(num: number) {
+    return wikiImageUrl(this.phases[num]);
+  }
+  get phases() {
+    return this.char.pic.map(v => v.replace('.png', '_p.png'));
+  }
+  phaseLoop() {
+    if (this.phase + 1 < this.char.pic.length) this.phase++;
+    else this.phase = 0;
+  }
 }
 </script>
 <style lang="less" scoped>
@@ -31,12 +61,22 @@ export default class CharPortrait extends Vue {
   display: inline-block;
 }
 .char-portrait {
-  width: 90px;
-  height: 184px;
-  background-color: white;
-  background-size: 100% auto;
-  background-repeat: no-repeat;
   position: relative;
+  width: 90px;
+  height: 206px;
+  user-select: none;
+  .pic {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    img {
+      position: absolute;
+      width: 100%;
+      pointer-events: none;
+    }
+  }
   .header {
     margin: 2px 0 0 2px;
     display: flex;
@@ -69,7 +109,7 @@ export default class CharPortrait extends Vue {
     bottom: 0px;
     height: 96px;
     width: 100%;
-    background-image: linear-gradient(25deg, transparent, transparent 14%, #232323 15%, #232323 30%, #565623 40%, #fef7de 41%, #e7d07a 47%, transparent 60%);
+    // background-image: linear-gradient(25deg, transparent, transparent 14%, #232323 15%, #232323 30%, #565623 40%, #fef7de 41%, #e7d07a 47%, transparent 60%);
     &::after {
       content: '';
       position: absolute;
@@ -80,13 +120,13 @@ export default class CharPortrait extends Vue {
       background-image: linear-gradient(25deg, transparent, transparent 14%, #232323 15%, #232323 30%, #585858 40%, #ffffff 41%, #ffffffc5 47%, transparent 60%);
     }
     &.r2 {
-      background-image: linear-gradient(25deg, transparent, transparent 14%, #232323 15%, #232323 30%, #405623 40%, #c4e763 41%, #c4e763c5 47%, transparent 60%);
+      background-image: linear-gradient(25deg, transparent, transparent 14%, #232323 15%, #232323 30%, #405623 40%, #dce537 41%, #c4e763c5 47%, transparent 60%);
     }
     &.r3 {
       background-image: linear-gradient(25deg, transparent, transparent 14%, #232323 15%, #232323 30%, #233d56 40%, #489dec 41%, #489decc5 47%, transparent 60%);
     }
     &.r4 {
-      background-image: linear-gradient(25deg, transparent, transparent 14%, #232323 15%, #232323 30%, #3f183d 40%, #eed4ee 41%, #eed4eec5 47%, transparent 60%);
+      background-image: linear-gradient(25deg, transparent, transparent 14%, #232323 15%, #232323 30%, #756d7e 40%, #e0ddeb 41%, #eed4eec5 47%, transparent 60%);
     }
     &.r5 {
       background-image: linear-gradient(25deg, transparent, transparent 14%, #232323 15%, #232323 30%, #565623 40%, #fef7de 41%, #e7d07a 47%, transparent 60%);
@@ -107,17 +147,44 @@ export default class CharPortrait extends Vue {
       }
     }
   }
-  .portrait {
+  .misc {
     position: absolute;
     bottom: 0;
-    padding: 3px;
+    width: 100%;
+    padding: 4px;
     background: linear-gradient(25deg, #565656, #565656 21%, #232323 22%, #232323 30%, transparent 60%);
     .name {
+      display: block;
       color: white;
-      font-size: 18px;
+      font-size: 17px;
       font-family: systHeavy;
-      font-weight: bold;
+      font-weight: 600;
+      text-align: right;
+      text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
     }
+  }
+}
+
+.flip-enter-active {
+  animation: flipOutY 0.5s reverse;
+}
+.flip-leave-active {
+  animation: flipOutY 0.5s;
+}
+@keyframes flipOutY {
+  from {
+    transform: perspective(400px);
+    opacity: 1;
+  }
+
+  30% {
+    transform: perspective(400px) rotate3d(0, 1, 0, -15deg);
+    opacity: 1;
+  }
+
+  to {
+    transform: perspective(400px) rotate3d(0, 1, 0, 90deg);
+    opacity: 0;
   }
 }
 </style>
