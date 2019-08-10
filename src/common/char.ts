@@ -8,6 +8,7 @@ export interface HRMatchGroup {
 }
 
 export class HRSystem {
+  // TODO: 改为从API导入
   charlist: HRInfo[] = hr;
 
   /** 过滤符合条件的干员 */
