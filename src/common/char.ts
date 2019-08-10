@@ -2,10 +2,25 @@ import hr from './hr.data';
 import { HRFilter, HRInfo } from './hr.i';
 import { map } from 'lodash-es';
 
-export interface HRMatchGroup {
-  name: string;
-  pattens: string[];
-  matched: HRInfo[];
+export interface ReducedHRInfo {
+  matched: { [key: string]: HRInfo[] };
+  wildcard: { [key: string]: HRInfo[] };
+}
+
+export interface MatchedHRInfo {
+  char: HRInfo;
+  exact: boolean;
+  tags: string[];
+  title: string;
+}
+
+enum Rairty {
+  一星干员 = 1,
+  新手 = 2,
+  三星干员 = 3,
+  四星干员 = 4,
+  资深干员 = 5,
+  高级资深干员 = 6,
 }
 
 export class HRSystem {
@@ -21,17 +36,7 @@ export class HRSystem {
   testChar(char: HRInfo, filters: HRFilter) {
     // 过滤稀有度
     if (filters.rairties.length && filters.rairties.length !== 6) {
-      const list = filters.rairties.map(
-        v =>
-          ({
-            一星干员: 1,
-            新手: 2,
-            三星干员: 3,
-            四星干员: 4,
-            资深干员: 5,
-            高级资深干员: 6,
-          }[v])
-      );
+      const list = filters.rairties.map(v => Rairty[v]);
       if (list.length && !list.includes(char.r)) return false;
     }
     // 过滤性别
@@ -57,8 +62,9 @@ export class HRSystem {
   /** 匹配干员符合条件的项目 */
   matchChar(char: HRInfo, filters: HRFilter) {
     let exact = true;
-    const charTags = [...char.tags, char.sex ? '男' : '女', , char.job];
-    const matchedTags = map(filters, tags => {
+    const charTags = [...char.tags, Rairty[char.r], char.sex ? '男' : '女', , char.job];
+    const matchedTags = map(filters, (tags, type) => {
+      if (type === 'methods') return [];
       return tags.filter(tag => {
         const isInChar = charTags.includes(tag);
         if (!isInChar) exact = false;
@@ -71,9 +77,18 @@ export class HRSystem {
 
   /** 按公招规则输出tag列表和干员列表 */
   reduceChars(filters: HRFilter) {
-    const filtered = this.filterChars(filters)
+    const filtered = this.charlist
+      .filter(char => {
+        if (filters.methods.length) {
+          const code = filters.methods.reduce((r, v) => r | { 干员寻访: 1, 公开招募: 2 }[v], 0);
+          if (code === 2 && char.r === 6 && !filters.rairties.includes('高级资深干员')) return false;
+          if (!(code & char.pool)) return false;
+        }
+        return true;
+      })
       .map(char => this.matchChar(char, filters))
       .filter(v => v.title);
+    // TODO: 排序
     const groups: ReducedHRInfo = {
       matched: filtered.reduce((r, v) => {
         if (v.exact) {
@@ -83,23 +98,13 @@ export class HRSystem {
         return r;
       }, {}),
       wildcard: filtered.reduce((r, v) => {
-        if (!r[v.title]) r[v.title] = [v.char];
-        else r[v.title].push(v.char);
+        if (!v.exact) {
+          if (!r[v.title]) r[v.title] = [v.char];
+          else r[v.title].push(v.char);
+        }
         return r;
       }, {}),
     };
     return groups;
   }
-}
-
-export interface ReducedHRInfo {
-  matched: { [key: string]: HRInfo[] };
-  wildcard: { [key: string]: HRInfo[] };
-}
-
-export interface MatchedHRInfo {
-  char: HRInfo;
-  exact: boolean;
-  tags: string[];
-  title: string;
 }

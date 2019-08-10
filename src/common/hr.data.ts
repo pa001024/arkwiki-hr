@@ -939,7 +939,7 @@ export default [
     job: '先锋',
     num: 'VC05',
     r: 5,
-    pool: 1,
+    pool: 0,
     sex: 0,
     tags: ['近战位', '费用回复', '防护'],
     desc: '击杀敌人后获得1点部署费用，撤退时返还初始部署费用',

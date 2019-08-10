@@ -4,7 +4,7 @@
       <transition-group name="flip" tag="div" class="pic" :data-phase="phase">
         <img v-for="(p, h) in phases" :key="h" v-show="phase === h" :src="getPhase(h)" :alt="p" />
       </transition-group>
-      <div class="header">
+      <div class="char-header">
         <span class="pro">
           <ArkIcon :name="char.job"></ArkIcon>
         </span>
@@ -117,7 +117,7 @@ export default class CharPortrait extends Vue {
     opacity: 0.8;
     mask-image: linear-gradient(160deg, transparent 30%, #000 35%, #000 80%, transparent 90%);
   }
-  .header {
+  .char-header {
     margin: 2px 0 0 2px;
     display: flex;
     &::before {

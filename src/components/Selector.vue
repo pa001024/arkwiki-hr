@@ -126,6 +126,7 @@ export default class Selector extends Vue {
     // background-image: linear-gradient(207deg, #223a53, #142637);
     color: #fff;
     font-size: 16px;
+    font-weight: 600;
     letter-spacing: 0.02em;
     text-decoration: none;
     text-transform: uppercase;
