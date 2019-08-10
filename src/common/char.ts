@@ -1,5 +1,6 @@
 import hr from './hr.data';
 import { HRFilter, HRInfo } from './hr.i';
+import { map } from 'lodash-es';
 
 export interface HRMatchGroup {
   name: string;
@@ -16,9 +17,10 @@ export class HRSystem {
     return this.charlist.filter(char => this.testChar(char, filters));
   }
 
+  /** 测试一个干员是否符合条件 (wildcard) */
   testChar(char: HRInfo, filters: HRFilter) {
     // 过滤稀有度
-    if (filters.rairties.length) {
+    if (filters.rairties.length && filters.rairties.length !== 6) {
       const list = filters.rairties.map(
         v =>
           ({
@@ -52,37 +54,52 @@ export class HRSystem {
     return true;
   }
 
+  /** 匹配干员符合条件的项目 */
   matchChar(char: HRInfo, filters: HRFilter) {
-    const matched: HRFilter = {
-      genders: [],
-      locations: [],
-      professions: [],
-      tags: [],
-      rairties: [],
-      methods: [],
-    };
-    // TODO:
-    return {
-      matched: false,
-      genders: [],
-      locations: [],
-      professions: [],
-      tags: [],
-      rairties: [],
-      methods: [],
-    };
+    let exact = true;
+    const charTags = [...char.tags, char.sex ? '男' : '女', , char.job];
+    const matchedTags = map(filters, tags => {
+      return tags.filter(tag => {
+        const isInChar = charTags.includes(tag);
+        if (!isInChar) exact = false;
+        return isInChar;
+      });
+    }).reduce((a, b) => a.concat(b));
+
+    return { char, exact, tags: matchedTags, title: matchedTags.join('+') } as MatchedHRInfo;
   }
 
   /** 按公招规则输出tag列表和干员列表 */
   reduceChars(filters: HRFilter) {
-    const filtered = this.filterChars(filters);
-    const groups = {
-      matched: filtered.filter(v => {
-        return v;
-      }),
-      wildcard: [],
+    const filtered = this.filterChars(filters)
+      .map(char => this.matchChar(char, filters))
+      .filter(v => v.title);
+    const groups: ReducedHRInfo = {
+      matched: filtered.reduce((r, v) => {
+        if (v.exact) {
+          if (!r[v.title]) r[v.title] = [v.char];
+          else r[v.title].push(v.char);
+        }
+        return r;
+      }, {}),
+      wildcard: filtered.reduce((r, v) => {
+        if (!r[v.title]) r[v.title] = [v.char];
+        else r[v.title].push(v.char);
+        return r;
+      }, {}),
     };
-
     return groups;
   }
+}
+
+export interface ReducedHRInfo {
+  matched: { [key: string]: HRInfo[] };
+  wildcard: { [key: string]: HRInfo[] };
+}
+
+export interface MatchedHRInfo {
+  char: HRInfo;
+  exact: boolean;
+  tags: string[];
+  title: string;
 }

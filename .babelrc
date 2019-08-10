@@ -1,3 +1,11 @@
 {
-  "presets": ["@vue/app"]
+  "presets": [
+    "@vue/app",
+    [
+      "@babel/preset-env",
+      {
+        "modules": false // tree-shaking
+      }
+    ]
+  ]
 }

@@ -1,6 +1,6 @@
 <template>
   <span class="rarity">
-    <i class="chari chari-star" v-for="i in list" :key="i"></i>
+    <i class="arkicon arkicon-star" v-for="i in list" :key="i"></i>
   </span>
 </template>
 <script lang="ts">

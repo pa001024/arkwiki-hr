@@ -1,6 +1,6 @@
 <template>
   <div class="char-portrait-container">
-    <div class="char-portrait" @click="phaseLoop()">
+    <div class="char-portrait">
       <transition-group name="flip" tag="div" class="pic" :data-phase="phase">
         <img v-for="(p, h) in phases" :key="h" v-show="phase === h" :src="getPhase(h)" :alt="p" />
       </transition-group>
@@ -13,7 +13,10 @@
       <div class="mask" :class="['r'+char.r]"></div>
       <div class="misc">
         <div class="logo">
-          <WikiImage :name="`${char.logo}.png`" :size="24"></WikiImage>
+          <WikiImage :name="`${char.logo}.png`" :size="30"></WikiImage>
+        </div>
+        <div class="evolve" @click="phaseLoop">
+          <WikiImage :name="`elite_2_card.png`" :size="46"></WikiImage>
         </div>
         <span class="name">{{char.name}}</span>
       </div>
@@ -24,11 +27,9 @@
 import { Vue, Component, Watch, Prop, Model } from 'vue-property-decorator';
 import { HRInfo } from '../common/hr.i';
 import Rarity from './Rarity.vue';
-import ArkIcon from './ArkIcon.vue';
-import WikiImage from './WikiImage.vue';
 import { wikiImageUrl } from '../common/api';
 
-@Component({ components: { Rarity, WikiImage, ArkIcon } })
+@Component({ components: { Rarity } })
 export default class CharPortrait extends Vue {
   @Model('change') _phase: number;
   @Prop() char: HRInfo;
@@ -92,8 +93,8 @@ export default class CharPortrait extends Vue {
   user-select: none;
   .pic {
     position: absolute;
-    width: 100%;
-    height: 100%;
+    width: 90px;
+    height: 180px;
     display: flex;
     align-items: center;
     img {
@@ -101,6 +102,20 @@ export default class CharPortrait extends Vue {
       width: 100%;
       pointer-events: none;
     }
+  }
+  &::before {
+    content: '';
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    background-color: #795b3a;
+    @insetcolor: #301d0a;
+    background-image: linear-gradient(45deg, @insetcolor 25%, transparent 25%, transparent 75%, @insetcolor 75%, @insetcolor),
+      linear-gradient(-45deg, @insetcolor 25%, transparent 25%, transparent 75%, @insetcolor 75%, @insetcolor);
+    background-size: 60px 60px;
+    filter: blur(3px);
+    opacity: 0.8;
+    mask-image: linear-gradient(160deg, transparent 30%, #000 35%, #000 80%, transparent 90%);
   }
   .header {
     margin: 2px 0 0 2px;
@@ -132,7 +147,7 @@ export default class CharPortrait extends Vue {
     transform: scale(1.05);
     position: absolute;
     bottom: 0px;
-    height: 96px;
+    height: 134px;
     width: 100%;
     // background-image: linear-gradient(25deg, transparent, transparent 14%, #232323 15%, #232323 30%, #565623 40%, #fef7de 41%, #e7d07a 47%, transparent 60%);
     &::after {
@@ -157,16 +172,16 @@ export default class CharPortrait extends Vue {
       background-image: linear-gradient(25deg, transparent, transparent 14%, #232323 15%, #232323 30%, #565623 40%, #fef7de 41%, #e7d07a 47%, transparent 60%);
     }
     &.r6 {
-      background-image: linear-gradient(25deg, transparent, transparent 14%, #232323 15%, #232323 30%, #565623 40%, #ffd16db4 41%, transparent 60%);
+      background-image: linear-gradient(25deg, transparent, transparent 14%, #232323 15%, #232323 30%, #2e2e2e 30.1%, #64433a 38%, #814b3b 40%, #ffd16db4 41%, transparent 60%);
       &::after {
         content: '';
         position: absolute;
         width: 100%;
         height: 100%;
 
-        background-image: radial-gradient(#fff 30%, transparent 0), radial-gradient(#fff 30%, transparent 0), linear-gradient(130deg, #f87b32, #f0e659);
+        background-image: radial-gradient(#fff 30%, transparent 0), radial-gradient(#fff 30%, transparent 0), linear-gradient(130deg, #d66400, #f0e659);
         background-blend-mode: lighten;
-        mask-image: linear-gradient(25deg, transparent, transparent 37%, #000 41%, transparent 52%);
+        mask-image: linear-gradient(25deg, transparent 37%, #000 41%, transparent 52%);
         background-position: 0 0, 2.5px 2.5px, 0 0;
         background-size: 5px 5px, 5px 5px, auto auto;
       }
@@ -176,9 +191,12 @@ export default class CharPortrait extends Vue {
     position: absolute;
     bottom: 0;
     width: 100%;
-    padding: 4px;
+    height: 68px;
     background: linear-gradient(25deg, #565656, #565656 21%, #232323 22%, #232323 30%, transparent 60%);
     .name {
+      position: absolute;
+      bottom: 4px;
+      right: 4px;
       display: block;
       color: white;
       font-size: 17px;
@@ -186,6 +204,36 @@ export default class CharPortrait extends Vue {
       font-weight: 600;
       text-align: right;
       text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
+    }
+    .logo {
+      position: absolute;
+      left: 4px;
+      top: 8px;
+      transform: perspective(400px) rotate3d(0, 1, 0, 0deg);
+      opacity: 1;
+    }
+    // 精英化变更立绘
+    .evolve {
+      position: absolute;
+      cursor: pointer;
+      transform: perspective(400px) rotate3d(0, 1, 0, 90deg);
+      opacity: 0;
+      transition: 0.5s;
+      img {
+        pointer-events: none;
+      }
+    }
+  }
+  &:hover {
+    .misc {
+      .logo {
+        transform: perspective(400px) rotate3d(0, 1, 0, 90deg);
+        opacity: 0;
+      }
+      .evolve {
+        transform: perspective(400px) rotate3d(0, 1, 0, 0deg);
+        opacity: 1;
+      }
     }
   }
 }

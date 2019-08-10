@@ -41,16 +41,16 @@
         </div>
         <div class="tool red" @click="reset">重置</div>
         <div class="tool" @click="$emit('evolve', 0)">
-          <WikiImage name="精英初始.png" :size="20"></WikiImage>
+          <WikiImage name="elite_0_large.png" :size="20"></WikiImage>
         </div>
         <div class="tool" @click="$emit('evolve', 1)">
-          <WikiImage name="精英阶段1.png" :size="20"></WikiImage>
+          <WikiImage name="elite_1_large.png" :size="20"></WikiImage>
         </div>
         <div class="tool" @click="$emit('evolve', 2)">
-          <WikiImage name="精英阶段2.png" :size="20"></WikiImage>
+          <WikiImage name="elite_2_large.png" :size="20"></WikiImage>
         </div>
         <div class="tool" @click="$emit('evolve', 3)">
-          <ArkIcon name="skin"></ArkIcon>
+          <ArkIcon name="skin" style="font-size:20px"></ArkIcon>
         </div>
       </div>
     </div>
@@ -59,13 +59,11 @@
 
 <script lang="ts">
 import { Vue, Component, Model } from 'vue-property-decorator';
-import mapValues from 'lodash.mapvalues';
+import { mapValues } from 'lodash-es';
 import { HRFilter } from '../common/hr.i';
 import Options from './Options.vue';
-import ArkIcon from './ArkIcon.vue';
-import WikiImage from './WikiImage.vue';
 
-@Component({ components: { Options, ArkIcon, WikiImage } })
+@Component({ components: { Options } })
 export default class Selector extends Vue {
   @Model('change') _filter: HRFilter;
   get filters() {

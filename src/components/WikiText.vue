@@ -2,7 +2,7 @@
   <span>{{renderedText}}</span>
 </template>
 <script lang="ts">
-import { Vue, Component, Prop } from 'vue-property-decorator';
+import { Vue, Component, Prop, Watch } from 'vue-property-decorator';
 import { parseWikitext } from '../common/api';
 
 @Component({ components: {} })
@@ -11,9 +11,10 @@ export default class WikiText extends Vue {
   renderedText = '';
 
   mounted() {
-    this.loadText()
+    this.loadText();
   }
 
+  // @Watch('src') once
   async loadText() {
     this.renderedText = await parseWikitext(this.src);
   }
