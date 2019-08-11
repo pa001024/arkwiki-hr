@@ -39,6 +39,7 @@ export default class WikiImage extends Vue {
   reload() {
     console.log(`reload resource ${this.name}|${this.size}px`);
     preloadWikiImage(this.name, this.size);
+    preloadWikiImage(this.name, this.size * 2); // for x4
     setTimeout(() => {
       this.failed = false;
     }, 500);

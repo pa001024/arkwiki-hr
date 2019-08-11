@@ -1,11 +1,8 @@
-const WebpackDeepScopePlugin = require('webpack-deep-scope-plugin').default;
 
 module.exports = {
   productionSourceMap: false,
+  filenameHashing: false,
   chainWebpack: config => {
     config.optimization.delete('splitChunks');
   },
-  // configureWebpack: {
-  //   plugins: [new WebpackDeepScopePlugin()],
-  // },
 };

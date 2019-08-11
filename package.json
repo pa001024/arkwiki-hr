@@ -12,7 +12,7 @@
   "scripts": {
     "dev": "parcel public/index.html",
     "build": "parcel build public/index.html --no-source-maps --no-autoinstall --no-content-hash --experimental-scope-hoisting",
-    "webpack": "vue-cli-service build"
+    "webpack": "vue-cli-service build && node mwtransform.js"
   },
   "dependencies": {
     "animejs": "^3.1.0",
@@ -33,13 +33,14 @@
     "@vue/component-compiler-utils": "^3.0.0",
     "autoprefixer": "^9.6.1",
     "cross-env": "^5.2.0",
+    "es3ify": "^0.2.2",
+    "es3ify-mw": "^0.2.4",
     "less": "^3.9.0",
     "less-loader": "^5.0.0",
     "parcel-bundler": "^1.12.3",
     "rimraf": "^2.6.3",
     "typescript": "^3.5.3",
-    "vue-template-compiler": "^2.6.10",
-    "webpack-deep-scope-plugin": "^1.6.2"
+    "vue-template-compiler": "^2.6.10"
   },
   "browserslist": [
     "> 1%",
