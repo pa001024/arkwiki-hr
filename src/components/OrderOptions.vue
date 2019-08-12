@@ -1,30 +1,30 @@
 <template>
   <transition-group tag="div" class="options-group" name="options-list">
-    <div
+    <label
       v-for="name in names"
       :key="name"
       class="option"
-      :class="{ selected: getName(name) }"
+      :class="{ selected: valsMap[name] }"
       @click="setName(name)"
     >
       <span>
         <slot :item="name">
           <ArkIcon
-            v-if="getName(name)"
+            v-if="valsMap[name]"
             name="sort"
             class="reversable"
-            :class="{reversed : getName(name).asc}"
+            :class="{reversed : valsMap[name].asc}"
           ></ArkIcon>
           {{name}}
         </slot>
-        <span v-if="getName(name)" @click.stop="removeName(name)">×</span>
+        <span v-if="valsMap[name]" @click.stop="removeName(name)">×</span>
       </span>
-    </div>
+    </label>
   </transition-group>
 </template>
 <script lang="ts">
 import { Vue, Component, Watch, Prop, Model } from 'vue-property-decorator';
-import { map } from 'lodash-es';
+import { map, keyBy } from 'lodash-es';
 
 export interface OrderOption {
   name: string;
@@ -42,7 +42,7 @@ export default class OrderOptions extends Vue {
     this.$emit('change', val);
   }
   get valsMap() {
-    return this._vals.reduce((r, v) => ((r[v.name] = v), r), {});
+    return keyBy(this.vals, 'name');
   }
   set valsMap(val) {
     this.$emit('change', map(val));
@@ -50,11 +50,8 @@ export default class OrderOptions extends Vue {
 
   @Prop() names: string[];
 
-  getName(name: string) {
-    return this.vals.find(v => v.name === name);
-  }
   setName(name: string) {
-    if (this.getName(name)) {
+    if (this.valsMap[name]) {
       this.vals = this.vals.map(v => {
         if (v.name === name) v.asc = !v.asc;
         return v;
@@ -64,7 +61,7 @@ export default class OrderOptions extends Vue {
     }
   }
   removeName(name: string) {
-    if (this.getName(name)) {
+    if (this.valsMap[name]) {
       this.vals = this.vals.filter(v => v.name != name);
     }
   }

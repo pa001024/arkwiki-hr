@@ -88,7 +88,6 @@ export class HRSystem {
       })
       .map(char => this.matchChar(char, filters))
       .filter(v => v.title);
-    // TODO: 排序
     const groups: ReducedHRInfo = {
       matched: filtered.reduce((r, v) => {
         if (v.exact) {

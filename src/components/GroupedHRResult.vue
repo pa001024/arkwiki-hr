@@ -1,5 +1,5 @@
 <template>
-  <transition-group tag="div" name="roll" class="grouped-hr-result">
+  <transition-group tag="div" name="zoom" class="grouped-hr-result">
     <div class="hr-result-group" v-for="(match, tags) in groups.matched" :key="'matched'+tags">
       <div class="group-title exact">
         <div class="group-header" data-text="精确匹配">精确匹配</div>
@@ -75,7 +75,9 @@ export default class GroupedHRResult extends Vue {
   width: 0;
   transform: translateY(-30px);
 }
-
+.hr-result-group {
+  // transition: 0.5s;
+}
 .roll-enter,
 .roll-leave-to {
   height: 0px;
@@ -83,9 +85,46 @@ export default class GroupedHRResult extends Vue {
   transform: perspective(400px) rotate3d(1, 0, 0, 90deg);
 }
 .roll-leave-active {
-  height: 300px;
-  opacity: 1;
-  transform: perspective(400px) rotate3d(1, 0, 0, 0deg);
+  height: 0px;
+  opacity: 0;
+  transform: perspective(400px) rotate3d(1, 0, 0, -90deg);
+}
+
+.zoom-enter-active {
+  animation: zoomInLeft 0.5s;
+}
+.zoom-leave-active {
+  animation: zoomInLeft 0.5s reverse;
+}
+
+@keyframes zoomInLeft {
+  from {
+    opacity: 0;
+    height: 0;
+    transform: scale3d(0.1, 0.1, 0.1) translate3d(-1000px, 0, 0);
+    animation-timing-function: cubic-bezier(0.55, 0.055, 0.675, 0.19);
+  }
+
+  60% {
+    opacity: 1;
+    transform: scale3d(0.475, 0.475, 0.475) translate3d(10px, 0, 0);
+    animation-timing-function: cubic-bezier(0.175, 0.885, 0.32, 1);
+  }
+}
+@keyframes zoomOutRight {
+  40% {
+    opacity: 1;
+    -webkit-transform: scale3d(0.475, 0.475, 0.475) translate3d(-42px, 0, 0);
+    transform: scale3d(0.475, 0.475, 0.475) translate3d(-42px, 0, 0);
+  }
+
+  to {
+    opacity: 0;
+    -webkit-transform: scale(0.1) translate3d(2000px, 0, 0);
+    transform: scale(0.1) translate3d(2000px, 0, 0);
+    -webkit-transform-origin: right center;
+    transform-origin: right center;
+  }
 }
 
 .group-title {

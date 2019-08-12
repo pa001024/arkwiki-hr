@@ -8,6 +8,8 @@ import WikiImage from './components/WikiImage.vue';
 Vue.component('WikiImage', WikiImage);
 import WikiText from './components/WikiText.vue';
 Vue.component('WikiText', WikiText);
+import ArkButton from './components/ArkButton.vue';
+Vue.component('ArkButton', ArkButton);
 
 new Vue({
   el: '#hr-app',

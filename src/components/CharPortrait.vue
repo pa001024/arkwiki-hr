@@ -103,6 +103,7 @@ export default class CharPortrait extends Vue {
       pointer-events: none;
     }
   }
+  // 背景
   &::before {
     content: '';
     position: absolute;
@@ -207,10 +208,18 @@ export default class CharPortrait extends Vue {
     }
     .logo {
       position: absolute;
-      left: 4px;
-      top: 8px;
+      left: 22px;
+      top: 22px;
       transform: perspective(400px) rotate3d(0, 1, 0, 0deg);
       opacity: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 0;
+      width: 0;
+      img {
+        max-height: 36px;
+      }
     }
     // 精英化变更立绘
     .evolve {

@@ -1,12 +1,13 @@
 <template>
-  <button class="arkbtn" @click="onclick">{{text}}</button>
+  <div class="arkbtn" @click="onclick">
+    <slot></slot>
+  </div>
 </template>
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator';
 
 @Component({ components: {} })
-export default class ArkIcon extends Vue {
-  @Prop() text: string;
+export default class ArkButton extends Vue {
   onclick(e: MouseEvent) {
     this.$emit('click', e);
   }
@@ -14,6 +15,8 @@ export default class ArkIcon extends Vue {
 </script>
 
 <style lang="less" scoped>
+@text-color: #fff;
+@main-color: #2567e2;
 .arkbtn {
   display: flex;
   align-items: center;
@@ -27,9 +30,10 @@ export default class ArkIcon extends Vue {
   touch-action: manipulation;
   cursor: pointer;
   user-select: none;
-  background-image: none;
+  background: none;
   border: 2px solid @text-color;
   color: @text-color;
+  font-weight: 700;
   // background-color: #161a1e;
   transition: 0.4s;
   &:hover {
@@ -53,6 +57,10 @@ export default class ArkIcon extends Vue {
       background: @main-color;
       margin: 0 6px 12px -10px;
     }
+  }
+  &.red {
+    border: 2px solid #d72626;
+    color: #d72626;
   }
 }
 </style>
