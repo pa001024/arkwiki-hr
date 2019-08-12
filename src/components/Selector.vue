@@ -35,6 +35,12 @@
         </div>
         <Options :names="selectedNames.methods" v-model="filters.methods"></Options>
       </div>
+      <div class="filter-part orders">
+        <div class="title">
+          <span>排序</span>
+        </div>
+        <OrderOptions :names="selectedOrderNames" v-model="orderFilters"></OrderOptions>
+      </div>
       <div class="filter-part tools">
         <div class="title">
           <span>操作</span>
@@ -58,12 +64,17 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Model } from 'vue-property-decorator';
+import { Vue, Component, Model, Watch } from 'vue-property-decorator';
 import { mapValues } from 'lodash-es';
 import { HRFilter } from '../common/hr.i';
 import Options from './Options.vue';
+import OrderOptions, { OrderOption } from './OrderOptions.vue';
 
-@Component({ components: { Options } })
+interface HRSorter {
+  orders: string[];
+}
+
+@Component({ components: { Options, OrderOptions } })
 export default class Selector extends Vue {
   @Model('change') _filter: HRFilter;
   get filters() {
@@ -80,6 +91,14 @@ export default class Selector extends Vue {
     rairties: ['一星干员', '新手', '三星干员', '四星干员', '资深干员', '高级资深干员'],
     methods: ['公开招募', '干员寻访'],
   };
+
+  orderFilters: OrderOption[] = [];
+  orderNames = ['稀有度', '名称', '职业'];
+
+  get selectedOrderNames() {
+    const selected = this.orderFilters.map(v => v.name);
+    return [...selected, ...this.orderNames.filter(s => !selected.includes(s))];
+  }
 
   get selectedNames() {
     return mapValues(this.names, (v, n: keyof HRFilter) => {
