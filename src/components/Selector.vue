@@ -55,11 +55,11 @@
           @change="$emit('filterchange', orderFilters)"
         ></OrderOptions>
       </div>
-      <div class="filter-part tools masterpart" :class="{'hidden-part': hidden.tools}">
+      <div class="filter-part tools" :class="{'hidden-part': hidden.tools}">
         <div class="title" @click="hide('tools')">
           <span>选项</span>
         </div>
-        <template v-if="!hidden.tools">
+        <div class="subpart" v-if="!hidden.tools">
           <ArkButton class="red" @click="reset">重置</ArkButton>
           <ArkButton @click="$emit('evolve', 0)">
             <WikiImage name="elite_0_large.png" :size="20"></WikiImage>
@@ -73,7 +73,7 @@
           <ArkButton @click="$emit('evolve', 3)">
             <ArkIcon name="skin" style="font-size:20px"></ArkIcon>
           </ArkButton>
-        </template>
+        </div>
       </div>
     </div>
   </div>
@@ -232,11 +232,9 @@ export default class Selector extends Vue {
     }
   }
 }
-.masterpart {
+.subpart {
+  display: flex;
   flex-wrap: wrap;
-  .subpart {
-    display: flex;
-    align-items: center;
-  }
+  margin: 4px 0;
 }
 </style>

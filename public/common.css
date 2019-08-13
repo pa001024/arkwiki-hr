@@ -17149,3 +17149,13 @@ table.navbox + table.navbox {
     right: 170px;
   }
 }
+.arkicon.box:before {
+  width: 1em;
+  height: 1em;
+  background: #fff;
+  color: #000;
+  box-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+  margin-right: 2px;
+  font-size: 0.9em;
+  padding: 1px;
+}

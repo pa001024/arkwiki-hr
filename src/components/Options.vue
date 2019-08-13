@@ -7,7 +7,7 @@
       class="option"
       :class="{ selected: vals.includes(name) }"
     >
-      <input type="checkbox" v-model="vals" :value="name" />
+      <input :type="type" v-model="vals" :value="name" />
       <span>
         <slot :item="name">{{name}}</slot>
       </span>
@@ -19,7 +19,7 @@ import { Vue, Component, Watch, Prop, Model } from 'vue-property-decorator';
 
 @Component({})
 export default class Options extends Vue {
-  @Model('change') _vals: string[];
+  @Model('change') _vals: string[] | string;
   get vals() {
     return this._vals;
   }
@@ -27,6 +27,7 @@ export default class Options extends Vue {
     this.$emit('change', val);
   }
   @Prop() names: string[];
+  @Prop({ default: 'checkbox' }) type: string;
 }
 </script>
 <style lang="less" scoped>

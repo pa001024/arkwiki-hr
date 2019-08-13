@@ -36,22 +36,21 @@ export default class WikiImage extends Vue {
 
   failed = false;
 
-  reload() {
+  async reload() {
     console.log(`reload resource ${this.name}|${this.size}px`);
-    preloadWikiImage(this.name, this.size);
-    preloadWikiImage(this.name, this.size * 2); // for x4
+    await preloadWikiImage(this.name, this.size);
+    await preloadWikiImage(this.name, this.size * 2); // for x4
     setTimeout(() => {
       this.failed = false;
     }, 500);
   }
 
-  loadFailed(err: Error) {
+  async loadFailed(err: Error) {
     if (!this.raw) {
-      preloadWikiImage(this.name, this.size);
+      await preloadWikiImage(this.name, this.size);
+      await preloadWikiImage(this.name, this.size * 2); // for x4
       this.failed = true;
     }
   }
 }
 </script>
-<style lang="less" scoped>
-</style>

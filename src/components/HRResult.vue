@@ -1,12 +1,13 @@
 <template>
   <transition-group tag="div" class="hr-result" name="hr-list">
-    <CharPortrait
+    <component
+      :is="tplName"
       :initEvolve="evolve"
       class="result-item"
       :char="char"
       v-for="char in results"
       :key="char.name"
-    ></CharPortrait>
+    ></component>
   </transition-group>
 </template>
 
@@ -14,11 +15,21 @@
 import { Vue, Component, Watch, Prop, Model } from 'vue-property-decorator';
 import { HRInfo } from '../common/hr.i';
 import CharPortrait from './CharPortrait.vue';
+import CharAvatar from './CharAvatar.vue';
+import CharLink from './CharLink.vue';
 
-@Component({ components: { CharPortrait } })
+@Component({ components: { CharPortrait, CharAvatar,CharLink } })
 export default class HRResult extends Vue {
   @Prop() evolve: number;
   @Prop() results: HRInfo[];
+  @Prop() mode: string;
+  get tplName() {
+    return {
+      文字: 'CharLink',
+      头像: 'CharPortrait',
+      半身像: 'CharAvatar',
+    }[this.mode];
+  }
 }
 </script>
 
