@@ -4,8 +4,16 @@
       <transition-group name="flip" tag="div" class="pic" :data-phase="phase" @click="changeEvolve">
         <img v-for="(p, h) in phases" :key="h" v-show="phase === h" :src="getPhase(h)" :alt="p" />
       </transition-group>
+      <div class="char-header">
+        <span class="pro">
+          <ArkIcon :name="char.job"></ArkIcon>
+        </span>
+        <Rarity :star="char.r"></Rarity>
+      </div>
       <div class="misc">
-        <span class="name">{{char.name}}</span>
+        <a target="_blank" :href="`/wiki/${char.name}`">
+          <span class="name">{{char.name}}</span>
+        </a>
       </div>
     </div>
   </div>
@@ -23,6 +31,9 @@ export default class CharAvatar extends Vue {
   @Prop() initEvolve: number;
 
   iphase = 0;
+  mounted() {
+    this.changeEvolve();
+  }
 
   @Watch('initEvolve')
   changeEvolve() {
@@ -85,6 +96,26 @@ export default class CharAvatar extends Vue {
     height: 100%;
     border: 10px solid #fff;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.6), 0 2px 4px rgba(0, 0, 0, 0.6) inset;
+  }
+  .char-header {
+    margin: 2px 0 0 2px;
+    position: absolute;
+    display: flex;
+    .pro {
+      color: #fff;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 20px;
+      height: 20px;
+      background: linear-gradient(45deg, #1f1e1e, #232323);
+      z-index: 1;
+    }
+    .rarity {
+      font-size: 12px;
+      color: #f5e023;
+      z-index: 1;
+    }
   }
   .pic {
     position: absolute;

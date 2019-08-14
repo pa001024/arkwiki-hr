@@ -17,17 +17,19 @@ import { HRInfo } from '../common/hr.i';
 import CharPortrait from './CharPortrait.vue';
 import CharAvatar from './CharAvatar.vue';
 import CharLink from './CharLink.vue';
+import CharColor from './CharColor.vue';
 
-@Component({ components: { CharPortrait, CharAvatar,CharLink } })
+@Component({ components: { CharPortrait, CharAvatar, CharLink, CharColor } })
 export default class HRResult extends Vue {
   @Prop() evolve: number;
   @Prop() results: HRInfo[];
   @Prop() mode: string;
   get tplName() {
     return {
+      颜色: 'CharColor',
       文字: 'CharLink',
-      头像: 'CharPortrait',
-      半身像: 'CharAvatar',
+      头像: 'CharAvatar',
+      肖像: 'CharPortrait',
     }[this.mode];
   }
 }

@@ -1,33 +1,36 @@
 
 <template>
   <div class="hr">
-    <div class="header">
-      <CharSelector v-model="filters" @evolve="e => evolve = e" @filterchange="e => orders = e"></CharSelector>
-      <div class="displaymode">
-        <Options class="light" v-model="mode" :names="['文字','头像','半身像']" type="radio"></Options>
-      </div>
-      <GroupedHRResult
-        v-if="filters.methods.includes('公开招募')"
-        :groups="reducedChars"
-        :evolve="evolve"
-      ></GroupedHRResult>
-      <HRResult v-else :mode="mode" :results="filteredChars" :evolve="evolve"></HRResult>
+    <div class="hr-header">
+      <CharSelector
+        v-model="filters"
+        @evolve="e => evolve = e"
+        @filterchange="e => orders = e"
+        @stylechange="e => mode = e"
+        :mode="mode"
+      ></CharSelector>
     </div>
+    <GroupedHRResult
+      v-if="filters.methods.includes('公开招募')"
+      :mode="mode"
+      :groups="reducedChars"
+      :evolve="evolve"
+    ></GroupedHRResult>
+    <HRResult v-else :mode="mode" :results="filteredChars" :evolve="evolve"></HRResult>
   </div>
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop } from 'vue-property-decorator';
+import { Vue, Component, Prop, Watch } from 'vue-property-decorator';
 import Selector from './Selector.vue';
 import HRResult from './HRResult.vue';
 import GroupedHRResult from './GroupedHRResult.vue';
-import Options from './Options.vue';
 import { HRFilter } from '../common/hr.i';
 import { HRSystem, ReducedHRInfo } from '../common/char';
 import { OrderOption } from './OrderOptions.vue';
 import { orderBy, map, keyBy, mapValues, maxBy, minBy } from 'lodash-es';
 
-@Component({ components: { CharSelector: Selector, HRResult, GroupedHRResult, Options } })
+@Component({ components: { CharSelector: Selector, HRResult, GroupedHRResult } })
 export default class HRTool extends Vue {
   filters: HRFilter = {
     genders: [],
@@ -38,7 +41,12 @@ export default class HRTool extends Vue {
     methods: [],
   };
 
-  mode = '文字';
+  mode = localStorage.getItem('ext.hr.mode') || '文字';
+
+  @Watch('mode')
+  modeChange() {
+    localStorage.setItem('ext.hr.mode', this.mode);
+  }
 
   orders: OrderOption[] = [];
 
@@ -79,9 +87,6 @@ export default class HRTool extends Vue {
 <style lang="less" scoped>
 .hr {
   background: #bbbec0;
-}
-.displaymode {
-  background: rgba(0, 0, 0, 0.6);
 }
 .menu-panel {
   display: flex;

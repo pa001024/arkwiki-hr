@@ -8,6 +8,12 @@
         </div>
         <Options v-show="!hidden.genders" :names="selectedNames.genders" v-model="filters.genders"></Options>
       </div>
+      <div class="filter-part locations" :class="{'hidden-part': hidden.locations}">
+        <div class="title" @click="hide('locations')">
+          <span>位置</span>
+        </div>
+        <Options v-show="!hidden.locations" :names="selectedNames.locations" v-model="filters.locations"></Options>
+      </div>
       <div class="filter-part professions" :class="{'hidden-part': hidden.professions}">
         <div class="title" @click="hide('professions')">
           <span>职业</span>
@@ -55,6 +61,18 @@
           @change="$emit('filterchange', orderFilters)"
         ></OrderOptions>
       </div>
+      <div class="filter-part styles" :class="{'hidden-part': hidden.styles}">
+        <div class="title" @click="hide('styles')">
+          <span>样式</span>
+        </div>
+        <Options
+          type="radio"
+          v-show="!hidden.styles"
+          :names="styleNames"
+          v-model="displayStyle"
+          @change="$emit('stylechange', displayStyle)"
+        ></Options>
+      </div>
       <div class="filter-part tools" :class="{'hidden-part': hidden.tools}">
         <div class="title" @click="hide('tools')">
           <span>选项</span>
@@ -80,7 +98,7 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Model, Watch } from 'vue-property-decorator';
+import { Vue, Component, Model, Watch, Prop } from 'vue-property-decorator';
 import { mapValues } from 'lodash-es';
 import { HRFilter } from '../common/hr.i';
 import Options from './Options.vue';
@@ -105,14 +123,15 @@ export default class Selector extends Vue {
   };
 
   hidden: { [key: string]: boolean } = {
-    genders: true,
-    locations: true,
-    professions: true,
-    tags: true,
-    rairties: true,
-    methods: true,
-    orders: true,
-    tools: true,
+    genders: true, // 性别
+    locations: true, // 位置
+    professions: true, // 职业
+    tags: false, // 标签
+    rairties: true, // 稀有度
+    methods: false, // 方式
+    orders: true, // 排序
+    tools: false, // 选项
+    styles: true, // 样式
   };
 
   hide(key: string) {
@@ -127,6 +146,10 @@ export default class Selector extends Vue {
   orderFilters: OrderOption[] = [];
   orderNames = ['稀有度', '名称', '职业'];
 
+  @Prop() mode: string;
+  displayStyle = this.mode || '文字';
+  styleNames = ['颜色', '文字', '头像', '肖像'];
+
   get selectedOrderNames() {
     const selected = this.orderFilters.map(v => v.name);
     return [...selected, ...this.orderNames.filter(s => !selected.includes(s))];
@@ -140,7 +163,7 @@ export default class Selector extends Vue {
   }
 
   reset() {
-    this.filters = mapValues(this.filters, v => []);
+    this.filters = mapValues(this.filters, (v, n) => (n === 'methods' ? v : []));
   }
 }
 </script>
@@ -161,7 +184,6 @@ export default class Selector extends Vue {
   //   filter: blur(5px);
   //   z-index: -1;
   // }
-  background: rgba(0, 0, 0, 0.4);
   padding: 8px 0;
 }
 .filter-list {

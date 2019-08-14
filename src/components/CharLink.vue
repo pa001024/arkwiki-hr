@@ -2,7 +2,7 @@
   <div class="char-link">
     <ruby>
       <ArkIcon class="box" :name="char.job"></ArkIcon>
-      <a :href="`/wiki/${char.name}`">
+      <a target="_blank" :href="`/wiki/${char.name}`">
         <span class="name">{{char.name}}</span>
       </a>
       <rt style="text-align:left;">
@@ -26,8 +26,10 @@ export default class CharLink extends Vue {
   color: white;
   .name {
     color: white;
+    text-shadow: 0 0 5px black;
+    text-decoration: none;
   }
-  text-shadow: 0 0 5px black;
+  white-space: nowrap;
   line-height: 18px;
   margin-right: 0.1em;
   font-weight: bold;

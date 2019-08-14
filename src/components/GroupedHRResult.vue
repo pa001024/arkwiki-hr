@@ -6,13 +6,14 @@
         <div class="group-tag" v-for="tag in split(tags)" :key="tag">{{tag}}</div>
       </div>
       <transition-group tag="div" class="hr-result" name="hr-list">
-        <CharPortrait
+        <component
+          :is="tplName"
           :initEvolve="evolve"
           class="result-item"
           :char="char"
           v-for="char in match"
           :key="char.name"
-        ></CharPortrait>
+        ></component>
       </transition-group>
     </div>
     <div class="hr-result-group" v-for="(match, tags) in groups.wildcard" :key="'wildcard'+tags">
@@ -21,13 +22,14 @@
         <div class="group-tag" v-for="tag in split(tags)" :key="tag">{{tag}}</div>
       </div>
       <transition-group tag="div" class="hr-result" name="hr-list">
-        <CharPortrait
+        <component
+          :is="tplName"
           :initEvolve="evolve"
           class="result-item"
           :char="char"
           v-for="char in match"
           :key="char.name"
-        ></CharPortrait>
+        ></component>
       </transition-group>
     </div>
   </transition-group>
@@ -36,19 +38,31 @@
 <script lang="ts">
 import { Vue, Component, Watch, Prop, Model } from 'vue-property-decorator';
 import { HRInfo } from '../common/hr.i';
-import CharPortrait from './CharPortrait.vue';
 import { ReducedHRInfo } from '../common/char';
+import CharPortrait from './CharPortrait.vue';
+import CharAvatar from './CharAvatar.vue';
+import CharLink from './CharLink.vue';
+import CharColor from './CharColor.vue';
 
-@Component({ components: { CharPortrait } })
+@Component({ components: { CharPortrait, CharAvatar, CharLink, CharColor } })
 export default class GroupedHRResult extends Vue {
   @Prop() evolve: number;
   @Prop() groups: ReducedHRInfo;
+  @Prop() mode: string;
 
   get hasExact() {
     return !!Object.keys(this.groups.matched);
   }
   split(src: string) {
     return src.split('+');
+  }
+  get tplName() {
+    return {
+      颜色: 'CharColor',
+      文字: 'CharLink',
+      头像: 'CharAvatar',
+      肖像: 'CharPortrait',
+    }[this.mode];
   }
 }
 </script>
@@ -149,15 +163,15 @@ export default class GroupedHRResult extends Vue {
     .group-header {
       color: #2567e2;
 
-      text-shadow: 1px 1px 0 #fff, -1px 1px 0 #fff, 1px -1px 0 #fff, -1px -1px 0 #fff;
-      // position: relative;
-      // z-index: 0;
-      // &::before {
-      //   content: attr(data-text);
-      //   position: absolute;
-      //   -webkit-text-stroke: 2px #fff;
-      //   z-index: -1;
-      // }
+      // text-shadow: 1px 1px 0 #fff, -1px 1px 0 #fff, 1px -1px 0 #fff, -1px -1px 0 #fff;
+      position: relative;
+      z-index: 0;
+      &::before {
+        content: attr(data-text);
+        position: absolute;
+        -webkit-text-stroke: 2px #fff;
+        z-index: -1;
+      }
     }
     .group-tag {
       @main-color: #2567e2;

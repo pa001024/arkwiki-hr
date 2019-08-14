@@ -18,7 +18,10 @@
         <div class="evolve" @click="phaseLoop">
           <WikiImage :name="`elite_2_card.png`" :size="46"></WikiImage>
         </div>
-        <span class="name">{{char.name}}</span>
+        <span class="alt">{{char.alt}}</span>
+        <a target="_blank" :href="`/wiki/${char.name}`">
+          <span class="name">{{char.name}}</span>
+        </a>
       </div>
     </div>
   </div>
@@ -36,6 +39,9 @@ export default class CharPortrait extends Vue {
   @Prop() initEvolve: number;
 
   iphase = 0;
+  mounted() {
+    this.changeEvolve();
+  }
 
   @Watch('initEvolve')
   changeEvolve() {
@@ -203,7 +209,19 @@ export default class CharPortrait extends Vue {
       font-size: 17px;
       font-family: systHeavy;
       font-weight: 600;
-      text-align: right;
+      text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
+    }
+    .alt {
+      position: absolute;
+      bottom: 22px;
+      right: 4px;
+      color: white;
+      // 强制解除浏览器字体大小限制
+      font-size: 22px;
+      transform: scale(0.5); // 实际字体大小=11px
+      transform-origin: 100% 100%;
+      font-family: systHeavy;
+      white-space: nowrap;
       text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
     }
     .logo {
