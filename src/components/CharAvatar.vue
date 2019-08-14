@@ -112,7 +112,10 @@ export default class CharAvatar extends Vue {
       z-index: 1;
     }
     .rarity {
-      font-size: 12px;
+      font-size: 24px;
+      transform: scale(0.5);
+      transform-origin: 0% 0%;
+      white-space: nowrap;
       color: #f5e023;
       z-index: 1;
     }

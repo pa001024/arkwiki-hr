@@ -26,7 +26,7 @@ export const parseWikitext = async (wikitext: string) => {
 };
 /** 解析图片以显示未进入缓存的缩略图 */
 export const preloadWikiImage = (file: string, size: number) => {
-  return parseWikitext(`[[File:${file}|${size}px]]`);
+  return parseWikitext(`[[File:${file}|${size}px]][[File:${file}|${size*2}px]]`);
 };
 
 window['parseWikitext'] = parseWikitext;

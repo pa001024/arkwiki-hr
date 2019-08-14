@@ -5,7 +5,7 @@
     @error="loadFailed"
     :src="x1"
     :width="size"
-    :srcset="isRaw ? '' : `${x1_5} 1.5x, ${x2} 2x, ${x4} 4x`"
+    :srcset="isRaw ? '' : `${x2} 2x, ${x4} 4x`"
   />
 </template>
 <script lang="ts">
@@ -16,7 +16,7 @@ import { wikiImageUrl, parseWikitext, preloadWikiImage } from '../common/api';
 export default class WikiImage extends Vue {
   @Prop({ required: true }) name: string;
   @Prop() size: number;
-  @Prop() raw: boolean;
+  @Prop({ type: Boolean }) raw: boolean;
 
   get isRaw() {
     return typeof this.size === 'undefined' || this.raw;
@@ -24,9 +24,9 @@ export default class WikiImage extends Vue {
   get x1() {
     return wikiImageUrl(this.name, this.isRaw ? '' : this.size);
   }
-  get x1_5() {
-    return wikiImageUrl(this.name, ~~(this.size * 1.5));
-  }
+  // get x1_5() {
+  //   return wikiImageUrl(this.name, ~~(this.size * 1.5));
+  // }
   get x2() {
     return wikiImageUrl(this.name, this.size * 2);
   }
@@ -39,7 +39,6 @@ export default class WikiImage extends Vue {
   async reload() {
     console.log(`reload resource ${this.name}|${this.size}px`);
     await preloadWikiImage(this.name, this.size);
-    await preloadWikiImage(this.name, this.size * 2); // for x4
     setTimeout(() => {
       this.failed = false;
     }, 500);
@@ -48,7 +47,6 @@ export default class WikiImage extends Vue {
   async loadFailed(err: Error) {
     if (!this.raw) {
       await preloadWikiImage(this.name, this.size);
-      await preloadWikiImage(this.name, this.size * 2); // for x4
       this.failed = true;
     }
   }

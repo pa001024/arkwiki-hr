@@ -16,7 +16,7 @@
           <WikiImage :name="`${char.logo}.png`" :size="30"></WikiImage>
         </div>
         <div class="evolve" @click="phaseLoop">
-          <WikiImage :name="`elite_2_card.png`" :size="46"></WikiImage>
+          <WikiImage :name="`elite_2_card.png`" :size="46" raw></WikiImage>
         </div>
         <span class="alt">{{char.alt}}</span>
         <a target="_blank" :href="`/wiki/${char.name}`">
@@ -146,7 +146,10 @@ export default class CharPortrait extends Vue {
       z-index: 1;
     }
     .rarity {
-      font-size: 12px;
+      font-size: 24px;
+      transform: scale(0.5);
+      transform-origin: 0% 0%;
+      white-space: nowrap;
       color: #f5e023;
     }
   }

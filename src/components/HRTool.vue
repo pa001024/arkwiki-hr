@@ -94,4 +94,9 @@ export default class HRTool extends Vue {
     flex: 1;
   }
 }
+@media only screen and (max-width: 767px) {
+  .hr {
+    zoom: 0.7;
+  }
+}
 </style>
