@@ -12,10 +12,10 @@
       </div>
       <div class="mask" :class="['r'+char.r]"></div>
       <div class="misc">
-        <div class="logo">
+        <div class="logo" :class="{evol: char.pic.length > 1}">
           <WikiImage :name="`${char.logo}.png`" :size="30"></WikiImage>
         </div>
-        <div class="evolve" @click="phaseLoop">
+        <div class="evolve" v-if="char.pic.length > 1" @click="phaseLoop">
           <WikiImage :name="`elite_2_card.png`" :size="46" raw></WikiImage>
         </div>
         <span class="alt">{{char.alt}}</span>
@@ -256,7 +256,7 @@ export default class CharPortrait extends Vue {
   }
   &:hover {
     .misc {
-      .logo {
+      .logo.evol {
         transform: perspective(400px) rotate3d(0, 1, 0, 90deg);
         opacity: 0;
       }
