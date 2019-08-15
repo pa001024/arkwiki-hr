@@ -1,13 +1,13 @@
 
 <template>
-  <div class="hr" :style="hozStyle">
+  <div class="hr" :class="{horize:horize,fullscreen:horize||fullscreen}">
     <div class="hr-header">
       <CharSelector
         v-model="filters"
         @evolve="e => evolve = e"
         @filterchange="e => orders = e"
         @stylechange="e => mode = e"
-        @horize="horize"
+        @horize="e=> horize = !horize"
         :mode="mode"
       ></CharSelector>
     </div>
@@ -89,37 +89,15 @@ export default class HRTool extends Vue {
 
   hozStyle = {};
 
-  horize() {
-    if (Object.keys(this.hozStyle).length) {
-      this.hozStyle = {};
-    } else {
-      const zoom = document.body.clientWidth < 767 ? 0.7 : 1;
-      const conW = (window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth) / zoom;
-      const conH = (window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight) / zoom;
-      // transform: rotate(90deg); width: 667px; height: 375px;transform-origin:28% 50%;
-      //var iosTopHe = 0;//若有其他样式判断，写于此
-
-      this.hozStyle = {
-        transform: 'rotate(90deg) translate(' + (conH - conW) / 2 + 'px,' + (conH - conW) / 2 + 'px)',
-        width: 100 / zoom + 'vh',
-        height: 100 / zoom + 'vw',
-        //"margin-top":iosTopHe+"px",
-        // "border-left":iosTopHe+"px solid #000",
-        '-webkit-transform-origin': 'center center',
-        'transform-origin': 'center center',
-        'overflow-x': 'hidden',
-        position: 'fixed',
-        top: 0,
-        left: 0,
-      };
-    }
-  }
+  horize = false;
+  fullscreen = false;
 }
 </script>
 
 <style lang="less" scoped>
 .hr {
   background: #bbbec0;
+  transition: transform 0.5s;
 }
 .menu-panel {
   display: flex;
@@ -127,9 +105,35 @@ export default class HRTool extends Vue {
     flex: 1;
   }
 }
+.hr.fullscreen {
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+.hr.horize {
+  width: 100vh;
+  height: 100vw;
+  transform: rotate(90deg);
+  transform-origin: 50vw 50vw;
+  overflow-x: hidden;
+}
 @media only screen and (max-width: 767px) {
   .hr {
     zoom: 0.7;
+  }
+  .hr.horize {
+    width: 100vh/0.7;
+    height: 100vw/0.7;
+    transform: rotate(90deg);
+    transform-origin: 50vw/0.7 50vw/0.7;
+  }
+}
+@media screen and (orientation: landscape) {
+  html {
+    width: 100vh;
+    height: 100vm;
+    transform: rotate(90deg);
+    transform-origin: 50vw 50vw;
   }
 }
 </style>
