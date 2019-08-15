@@ -11,4 +11,6 @@ var originalFileContents = fs.readFileSync('dist/js/app.js', 'utf-8');
 
 var transformedFileData = transform(transformMW(originalFileContents));
 
-fs.writeFileSync('dist/app.mw.js', transformedFileData);
+fs.writeFileSync('dist/hr.js', transformedFileData);
+
+fs.copyFileSync('dist/css/app.css', 'dist/hr.css');

@@ -7,7 +7,7 @@
       class="option"
       :class="{ selected: vals.includes(name) }"
     >
-      <input type="checkbox" v-model="vals" :value="name" />
+      <input type="radio" v-model="vals" :value="name" />
       <span>
         <slot :item="name">{{name}}</slot>
       </span>
@@ -18,8 +18,8 @@
 import { Vue, Component, Watch, Prop, Model } from 'vue-property-decorator';
 
 @Component({})
-export default class Options extends Vue {
-  @Model('change') _vals: string[] | string;
+export default class RadioOptions extends Vue {
+  @Model('change') _vals: string;
   get vals() {
     return this._vals;
   }

@@ -120,9 +120,9 @@ export default class CharPortrait extends Vue {
     background-image: linear-gradient(45deg, @insetcolor 25%, transparent 25%, transparent 75%, @insetcolor 75%, @insetcolor),
       linear-gradient(-45deg, @insetcolor 25%, transparent 25%, transparent 75%, @insetcolor 75%, @insetcolor);
     background-size: 60px 60px;
-    filter: blur(3px);
-    opacity: 0.8;
-    mask-image: linear-gradient(160deg, transparent 30%, #000 35%, #000 80%, transparent 90%);
+    // filter: blur(3px); 在移动端会造成很严重的性能问题
+    opacity: 0.4;
+    mask-image: linear-gradient(160deg, transparent 34%, #000 35%, #000 80%, transparent 90%);
   }
   .char-header {
     margin: 2px 0 0 2px;

@@ -12,7 +12,11 @@
         <div class="title" @click="hide('locations')">
           <span>位置</span>
         </div>
-        <Options v-show="!hidden.locations" :names="selectedNames.locations" v-model="filters.locations"></Options>
+        <Options
+          v-show="!hidden.locations"
+          :names="selectedNames.locations"
+          v-model="filters.locations"
+        ></Options>
       </div>
       <div class="filter-part professions" :class="{'hidden-part': hidden.professions}">
         <div class="title" @click="hide('professions')">
@@ -65,13 +69,12 @@
         <div class="title" @click="hide('styles')">
           <span>样式</span>
         </div>
-        <Options
-          type="radio"
+        <RadioOptions
           v-show="!hidden.styles"
           :names="styleNames"
           v-model="displayStyle"
           @change="$emit('stylechange', displayStyle)"
-        ></Options>
+        ></RadioOptions>
       </div>
       <div class="filter-part tools" :class="{'hidden-part': hidden.tools}">
         <div class="title" @click="hide('tools')">
@@ -102,9 +105,10 @@ import { Vue, Component, Model, Watch, Prop } from 'vue-property-decorator';
 import { mapValues } from 'lodash-es';
 import { HRFilter } from '../common/hr.i';
 import Options from './Options.vue';
+import RadioOptions from './RadioOptions.vue';
 import OrderOptions, { OrderOption } from './OrderOptions.vue';
 
-@Component({ components: { Options, OrderOptions } })
+@Component({ components: { Options, OrderOptions, RadioOptions } })
 export default class Selector extends Vue {
   @Model('change') _filter: HRFilter;
   get filters() {

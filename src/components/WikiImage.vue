@@ -16,10 +16,11 @@ import { wikiImageUrl, parseWikitext, preloadWikiImage } from '../common/api';
 export default class WikiImage extends Vue {
   @Prop({ required: true }) name: string;
   @Prop() size: number;
+  @Prop() max: number;
   @Prop({ type: Boolean }) raw: boolean;
 
   get isRaw() {
-    return typeof this.size === 'undefined' || this.raw;
+    return typeof this.size === 'undefined' || this.size > this.max || this.raw;
   }
   get x1() {
     return wikiImageUrl(this.name, this.isRaw ? '' : this.size);
@@ -28,10 +29,10 @@ export default class WikiImage extends Vue {
   //   return wikiImageUrl(this.name, ~~(this.size * 1.5));
   // }
   get x2() {
-    return wikiImageUrl(this.name, this.size * 2);
+    return wikiImageUrl(this.name, this.size * 2 > this.max ? null : this.size * 2);
   }
   get x4() {
-    return wikiImageUrl(this.name, this.size * 4);
+    return wikiImageUrl(this.name, this.size * 4 > this.max ? null : this.size * 4);
   }
 
   failed = false;
@@ -46,8 +47,8 @@ export default class WikiImage extends Vue {
 
   async loadFailed(err: Error) {
     if (!this.raw) {
-      await preloadWikiImage(this.name, this.size);
       this.failed = true;
+      await preloadWikiImage(this.name, this.size);
     }
   }
 }
