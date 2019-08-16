@@ -7,7 +7,7 @@
         @evolve="e => evolve = e"
         @filterchange="e => orders = e"
         @stylechange="e => mode = e"
-        @horize="e=> horize = !horize"
+        @horize="toggleHorize"
         :mode="mode"
       ></CharSelector>
     </div>
@@ -91,13 +91,38 @@ export default class HRTool extends Vue {
 
   horize = false;
   fullscreen = false;
+  toggleHorize() {
+    this.toggleFullScreen(!this.horize);
+    setTimeout(() => (this.horize = !this.horize), 200);
+  }
+  toggleFullScreen(isOpen: boolean) {
+    const anyDocument: any = document;
+    const isFullscreen = anyDocument.fullscreenElement || anyDocument.mozFullScreenElement || anyDocument.webkitFullscreenElement;
+    if (isOpen) {
+      if (anyDocument.documentElement.requestFullscreen) {
+        anyDocument.documentElement.requestFullscreen();
+      } else if (anyDocument.documentElement.mozRequestFullScreen) {
+        anyDocument.documentElement.mozRequestFullScreen();
+      } else if (anyDocument.documentElement.webkitRequestFullscreen) {
+        anyDocument.documentElement.webkitRequestFullscreen();
+      }
+    } else {
+      if (anyDocument.cancelFullScreen) {
+        anyDocument.cancelFullScreen();
+      } else if (anyDocument.mozCancelFullScreen) {
+        anyDocument.mozCancelFullScreen();
+      } else if (anyDocument.webkitCancelFullScreen) {
+        anyDocument.webkitCancelFullScreen();
+      }
+    }
+  }
 }
 </script>
 
 <style lang="less" scoped>
 .hr {
   background: #bbbec0;
-  transition: transform 0.5s;
+  // transition: transform 0.5s;
   overflow-x: hidden;
   &.fullscreen {
     position: fixed;
