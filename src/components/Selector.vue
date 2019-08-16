@@ -130,28 +130,27 @@ export default class Selector extends Vue {
     professions: ['辅助', '近卫', '狙击', '术师', '特种', '先锋', '医疗', '重装'],
     tags: ['输出', '防护', '生存', '治疗', '费用回复', '群攻', '减速', '支援', '快速复活', '削弱', '位移', '召唤', '控场', '爆发'],
     rairties: ['一星干员', '新手', '三星干员', '四星干员', '资深干员', '高级资深干员'],
-    methods: ['公开招募', '干员寻访'],
+    methods: ['公开招募', '干员寻访', '其他方式'],
   };
 
   hidden: { [key: string]: boolean } = {
     genders: true, // 性别
     locations: true, // 位置
     professions: true, // 职业
-    tags: false, // 标签
+    tags: true, // 标签
     rairties: true, // 稀有度
-    methods: false, // 方式
+    methods: true, // 方式
     orders: true, // 排序
-    tools: false, // 选项
     styles: true, // 样式
+    tools: false, // 选项
   };
 
   hide(key: string) {
     if (key in this.hidden) {
-      delete this.hidden[key];
+      this.hidden[key] = !this.hidden[key];
     } else {
       this.hidden[key] = true;
     }
-    this.hidden = Object.assign({}, this.hidden);
   }
 
   orderFilters: OrderOption[] = [];

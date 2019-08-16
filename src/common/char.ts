@@ -23,6 +23,12 @@ enum Rairty {
   高级资深干员 = 6,
 }
 
+enum Method {
+  干员寻访 = 1,
+  公开招募 = 2,
+  其他方式 = 4,
+}
+
 export class HRSystem {
   // TODO: 改为从API导入
   charlist: HRInfo[] = hr;
@@ -43,7 +49,7 @@ export class HRSystem {
     if (filters.genders.length === 1 && !!char.sex !== (filters.genders[0] === '男')) return false;
     // 过滤招募方式
     if (filters.methods.length) {
-      const code = filters.methods.reduce((r, v) => r | { 干员寻访: 1, 公开招募: 2 }[v], 0);
+      const code = filters.methods.reduce((r, v) => r | Method[v], 0);
       if (code === 2 && char.r === 6 && !filters.rairties.includes('高级资深干员')) return false;
       if (!(code & char.pool)) return false;
     }
@@ -80,7 +86,7 @@ export class HRSystem {
     const filtered = this.charlist
       .filter(char => {
         if (filters.methods.length) {
-          const code = filters.methods.reduce((r, v) => r | { 干员寻访: 1, 公开招募: 2 }[v], 0);
+          const code = filters.methods.reduce((r, v) => r | Method[v], 0);
           if (code === 2 && char.r === 6 && !filters.rairties.includes('高级资深干员')) return false;
           if (!(code & char.pool)) return false;
         }

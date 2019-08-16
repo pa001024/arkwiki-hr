@@ -1,28 +1,26 @@
 <template>
-  <div class="char-portrait-container">
-    <div class="char-portrait">
-      <transition-group name="flip" tag="div" class="pic" :data-phase="phase">
-        <img v-for="(p, h) in phases" :key="h" v-show="phase === h" :src="getPhase(h)" :alt="p" />
-      </transition-group>
-      <div class="char-header">
-        <span class="pro">
-          <ArkIcon :name="char.job"></ArkIcon>
-        </span>
-        <Rarity :star="char.r"></Rarity>
+  <div class="char-portrait" :class="['r'+char.r]">
+    <transition-group name="flip" tag="div" class="pic" :data-phase="phase">
+      <img v-for="(p, h) in phases" :key="h" v-show="phase === h" :src="getPhase(h)" :alt="p" />
+    </transition-group>
+    <div class="char-header">
+      <span class="pro">
+        <ArkIcon :name="char.job"></ArkIcon>
+      </span>
+      <Rarity :star="char.r"></Rarity>
+    </div>
+    <div class="mask"></div>
+    <div class="misc">
+      <div class="logo" :class="{evol: char.pic.length > 1}">
+        <WikiImage :name="`${char.logo}.png`" :size="30"></WikiImage>
       </div>
-      <div class="mask" :class="['r'+char.r]"></div>
-      <div class="misc">
-        <div class="logo" :class="{evol: char.pic.length > 1}">
-          <WikiImage :name="`${char.logo}.png`" :size="30"></WikiImage>
-        </div>
-        <div class="evolve" v-if="char.pic.length > 1" @click="phaseLoop">
-          <WikiImage :name="`elite_2_card.png`" :size="46" raw></WikiImage>
-        </div>
-        <span class="alt">{{char.alt}}</span>
-        <a target="_blank" :href="`/wiki/${char.name}`">
-          <span class="name">{{char.name}}</span>
-        </a>
+      <div class="evolve" v-if="char.pic.length > 1" @click="phaseLoop">
+        <WikiImage :name="`elite_2_card.png`" :size="46" raw></WikiImage>
       </div>
+      <span class="alt">{{char.alt}}</span>
+      <a target="_blank" :href="`/wiki/${char.name}`">
+        <span class="name">{{char.name}}</span>
+      </a>
     </div>
   </div>
 </template>
@@ -39,7 +37,7 @@ export default class CharPortrait extends Vue {
   @Prop() initEvolve: number;
 
   iphase = 0;
-  mounted() {
+  beforeMount() {
     this.changeEvolve();
   }
 
@@ -89,10 +87,27 @@ export default class CharPortrait extends Vue {
 }
 </script>
 <style lang="less" scoped>
-.char-portrait-container {
-  display: inline-block;
+// 棋盘背景
+.charbg-mask(@color1: #301d0a, @color2: #795b3a) {
+  // 背景
+  &::before {
+    content: '';
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    left: 0;
+    top: 0;
+    background-color: @color2;
+    background-image: linear-gradient(45deg, @color1 25%, transparent 25%, transparent 75%, @color1 75%, @color1),
+      linear-gradient(-45deg, @color1 25%, transparent 25%, transparent 75%, @color1 75%, @color1);
+    background-size: 60px 60px;
+    // filter: blur(3px); 在移动端会造成很严重的性能问题
+    opacity: 0.4;
+    mask-image: linear-gradient(160deg, transparent 34%, #000 35%, #000 80%, transparent 90%);
+  }
 }
 .char-portrait {
+  display: inline-block;
   position: relative;
   width: 90px;
   height: 206px;
@@ -109,21 +124,21 @@ export default class CharPortrait extends Vue {
       pointer-events: none;
     }
   }
-  // 背景
-  &::before {
-    content: '';
-    position: absolute;
-    height: 100%;
-    width: 100%;
-    background-color: #795b3a;
-    @insetcolor: #301d0a;
-    background-image: linear-gradient(45deg, @insetcolor 25%, transparent 25%, transparent 75%, @insetcolor 75%, @insetcolor),
-      linear-gradient(-45deg, @insetcolor 25%, transparent 25%, transparent 75%, @insetcolor 75%, @insetcolor);
-    background-size: 60px 60px;
-    // filter: blur(3px); 在移动端会造成很严重的性能问题
-    opacity: 0.4;
-    mask-image: linear-gradient(160deg, transparent 34%, #000 35%, #000 80%, transparent 90%);
+  &.r1,
+  &.r2,
+  &.r3 {
+    .charbg-mask(#cecece, #87888a);
   }
+  &.r4 {
+    .charbg-mask(#97a8af, #aac1f1);
+  }
+  &.r5 {
+    .charbg-mask(#a09277, #d4c47c);
+  }
+  &.r6 {
+    .charbg-mask();
+  }
+
   .char-header {
     margin: 2px 0 0 2px;
     display: flex;
@@ -166,35 +181,35 @@ export default class CharPortrait extends Vue {
       bottom: 0px;
       margin: 0.2em;
     }
-    &.r1 {
-      background-image: linear-gradient(25deg, transparent, transparent 14%, #232323 15%, #232323 30%, #585858 40%, #ffffff 41%, #ffffffc5 47%, transparent 60%);
-    }
-    &.r2 {
-      background-image: linear-gradient(25deg, transparent, transparent 14%, #232323 15%, #232323 30%, #405623 40%, #dce537 41%, #c4e763c5 47%, transparent 60%);
-    }
-    &.r3 {
-      background-image: linear-gradient(25deg, transparent, transparent 14%, #232323 15%, #232323 30%, #233d56 40%, #489dec 41%, #489decc5 47%, transparent 60%);
-    }
-    &.r4 {
-      background-image: linear-gradient(25deg, transparent, transparent 14%, #232323 15%, #232323 30%, #756d7e 40%, #e0ddeb 41%, #eed4eec5 47%, transparent 60%);
-    }
-    &.r5 {
-      background-image: linear-gradient(25deg, transparent, transparent 14%, #232323 15%, #232323 30%, #565623 40%, #fef7de 41%, #e7d07a 47%, transparent 60%);
-    }
-    &.r6 {
-      background-image: linear-gradient(25deg, transparent, transparent 14%, #232323 15%, #232323 30%, #2e2e2e 30.1%, #64433a 38%, #814b3b 40%, #ffd16db4 41%, transparent 60%);
-      &::after {
-        content: '';
-        position: absolute;
-        width: 100%;
-        height: 100%;
+  }
+  &.r1 .mask {
+    background-image: linear-gradient(25deg, transparent, transparent 14%, #232323 15%, #232323 30%, #585858 40%, #ffffff 41%, #ffffffc5 47%, transparent 60%);
+  }
+  &.r2 .mask {
+    background-image: linear-gradient(25deg, transparent, transparent 14%, #232323 15%, #232323 30%, #405623 40%, #dce537 41%, #c4e763c5 47%, transparent 60%);
+  }
+  &.r3 .mask {
+    background-image: linear-gradient(25deg, transparent, transparent 14%, #232323 15%, #232323 30%, #233d56 40%, #489dec 41%, #489decc5 47%, transparent 60%);
+  }
+  &.r4 .mask {
+    background-image: linear-gradient(25deg, transparent, transparent 14%, #232323 15%, #232323 30%, #756d7e 40%, #e0ddeb 41%, #eed4eec5 47%, transparent 60%);
+  }
+  &.r5 .mask {
+    background-image: linear-gradient(25deg, transparent, transparent 14%, #232323 15%, #232323 30%, #565623 40%, #fef7de 41%, #e7d07a 47%, transparent 60%);
+  }
+  &.r6 .mask {
+    background-image: linear-gradient(25deg, transparent, transparent 14%, #232323 15%, #232323 30%, #2e2e2e 30.1%, #64433a 38%, #814b3b 40%, #ffd16db4 41%, transparent 60%);
+    &::after {
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 100%;
 
-        background-image: radial-gradient(#fff 30%, transparent 0), radial-gradient(#fff 30%, transparent 0), linear-gradient(130deg, #d66400, #f0e659);
-        background-blend-mode: lighten;
-        mask-image: linear-gradient(25deg, transparent 37%, #000 41%, transparent 52%);
-        background-position: 0 0, 2.5px 2.5px, 0 0;
-        background-size: 5px 5px, 5px 5px, auto auto;
-      }
+      background-image: radial-gradient(#fff 30%, transparent 0), radial-gradient(#fff 30%, transparent 0), linear-gradient(130deg, #d66400, #f0e659);
+      background-blend-mode: lighten;
+      mask-image: linear-gradient(25deg, transparent 37%, #000 41%, transparent 52%);
+      background-position: 0 0, 2.5px 2.5px, 0 0;
+      background-size: 5px 5px, 5px 5px, auto auto;
     }
   }
   .misc {
