@@ -63,7 +63,7 @@ export default class HRTool extends Vue {
   hr = new HRSystem();
   get filteredChars() {
     const chars = this.hr.filterChars(this.filters);
-    return orderBy<HRInfo[]>(chars, ...this.ordersParms);
+    return orderBy(chars, ...this.ordersParms) as HRInfo[];
   }
 
   get reducedChars() {
@@ -98,6 +98,15 @@ export default class HRTool extends Vue {
 .hr {
   background: #bbbec0;
   transition: transform 0.5s;
+  overflow-x: hidden;
+  &.fullscreen {
+    position: fixed;
+    top: 0;
+    left: 0;
+  }
+  &.horize {
+    .horized();
+  }
 }
 .menu-panel {
   display: flex;
@@ -105,35 +114,21 @@ export default class HRTool extends Vue {
     flex: 1;
   }
 }
-.hr.fullscreen {
-  position: fixed;
-  top: 0;
-  left: 0;
-}
-.hr.horize {
-  width: 100vh;
-  height: 100vw;
-  transform: rotate(90deg);
-  transform-origin: 50vw 50vw;
-  overflow-x: hidden;
-}
+
 @media only screen and (max-width: 767px) {
   .hr {
     zoom: 0.7;
-  }
-  .hr.horize {
-    width: 100vh/0.7;
-    height: 100vw/0.7;
-    transform: rotate(90deg);
-    transform-origin: 50vw/0.7 50vw/0.7;
+    &.horize {
+      .horized($zoom);
+    }
   }
 }
-@media screen and (orientation: landscape) {
-  html {
-    width: 100vh;
-    height: 100vm;
-    transform: rotate(90deg);
-    transform-origin: 50vw 50vw;
-  }
+.horized(@zoom:1) {
+  width: 100vh / @zoom;
+  height: 100vw / @zoom;
+  // transform: rotate(90deg);
+  // transform-origin: 50vw/@zoom 50vw/@zoom;
+  transform-origin: top left;
+  transform: rotate(90deg) translate(0, -100vw / @zoom);
 }
 </style>
