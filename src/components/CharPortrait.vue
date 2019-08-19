@@ -4,9 +4,9 @@
       <img v-for="(p, h) in phases" :key="h" v-show="phase === h" :src="getPhase(h)" :alt="p" />
     </transition-group>
     <div class="char-header">
-      <span class="pro">
+      <div class="pro">
         <ArkIcon :name="char.job"></ArkIcon>
-      </span>
+      </div>
       <Rarity :star="char.r"></Rarity>
     </div>
     <div class="mask"></div>
@@ -141,30 +141,36 @@ export default class CharPortrait extends Vue {
 
   .char-header {
     margin: 2px 0 0 2px;
-    display: flex;
-    &::before {
+    position: relative;
+    height: 20px;
+    &::after {
       content: '';
       position: absolute;
       height: 33px;
       width: 100%;
       margin: -2px;
       background-image: linear-gradient(160deg, #181818, #2c2c2c 24%, transparent 26%);
+      z-index: 0;
     }
     .pro {
       color: #fff;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      width: 20px;
-      height: 20px;
+      width: 18px;
+      height: 18px;
       background: linear-gradient(45deg, #1f1e1e, #232323);
+      position: absolute;
       z-index: 1;
     }
     .rarity {
+      display: inline-block;
       font-size: 24px;
       transform: scale(0.5);
       transform-origin: 0% 0%;
       white-space: nowrap;
+      position: absolute;
+      left: 20px;
       color: #f5e023;
     }
   }

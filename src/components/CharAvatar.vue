@@ -106,8 +106,8 @@ export default class CharAvatar extends Vue {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      width: 20px;
-      height: 20px;
+      width: 18px;
+      height: 18px;
       background: linear-gradient(45deg, #1f1e1e, #232323);
       z-index: 1;
     }

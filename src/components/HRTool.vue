@@ -94,26 +94,28 @@ export default class HRTool extends Vue {
   toggleHorize() {
     // 是否已经横屏 如果已经横屏则只切换到全屏
     const isLandscape = document.documentElement.clientWidth > document.documentElement.clientHeight;
-    this.toggleFullScreen(!this.horize);
+    this.fullscreen = this.toggleFullScreen(!this.fullscreen);
     if (!isLandscape) setTimeout(() => (this.horize = !this.horize), 200);
   }
   toggleFullScreen(isOpen: boolean) {
     const anyDocument: any = document;
     const isFullscreen = anyDocument.fullscreenElement || anyDocument.mozFullScreenElement || anyDocument.webkitFullscreenElement;
     const method = isOpen
-      ? anyDocument.documentElement.requestFullscreen || anyDocument.documentElement.mozRequestFullScreen || anyDocument.documentElement.webkitRequestFullscreen
-      : anyDocument.cancelFullScreen || anyDocument.mozCancelFullScreen || anyDocument.webkitCancelFullScreen;
+        ? anyDocument.documentElement.requestFullscreen || anyDocument.documentElement.mozRequestFullScreen || anyDocument.documentElement.webkitRequestFullscreen
+        : anyDocument.cancelFullScreen || anyDocument.mozCancelFullScreen || anyDocument.webkitCancelFullScreen,
+      target = isOpen ? anyDocument.documentElement : anyDocument;
     if (method) {
-      method.call(isOpen ? anyDocument.documentElement : anyDocument);
+      method.call(target);
       const exitListener = () => {
         const isFullscreen = anyDocument.fullscreenElement || anyDocument.mozFullScreenElement || anyDocument.webkitFullscreenElement;
         if (!isFullscreen) {
-          this.horize = false;
+          this.fullscreen = this.horize = false;
           window.removeEventListener('resize', exitListener);
         }
       };
       window.addEventListener('resize', exitListener);
     }
+    return !isFullscreen;
   }
 }
 </script>
