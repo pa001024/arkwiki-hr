@@ -21,7 +21,7 @@ export default [
     num: 'RCX3',
     r: 1,
     pool: 2,
-    sex: 0,
+    sex: 1,
     tags: ['近战位', '支援'],
     desc: '能够阻挡一个敌人，且不受<@ba.kw>部署数量</>限制，但再部署时间极长',
   },
