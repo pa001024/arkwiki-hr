@@ -42,7 +42,7 @@ export default class HRTool extends Vue {
     methods: [],
   };
 
-  mode = localStorage.getItem('ext.hr.mode') || '文字';
+  mode = localStorage.getItem('ext.hr.mode') || (document.documentElement.clientWidth > 767 ? '肖像' : '文字');
 
   @Watch('mode')
   modeChange() {
@@ -129,6 +129,7 @@ export default class HRTool extends Vue {
     position: fixed;
     top: 0;
     left: 0;
+    z-index: 999;
   }
   &.horize {
     .horized();

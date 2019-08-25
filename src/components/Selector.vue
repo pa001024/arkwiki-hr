@@ -211,7 +211,8 @@ export default class Selector extends Vue {
   box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.6);
   min-height: 80px;
   background-image: linear-gradient(19deg, #293031 0%, #33373f 100%);
-  transition: 0.5s;
+  transition: 0.5s width;
+  will-change: width;
   .title {
     padding: 12px 24px;
     // background-color: #213a52;
