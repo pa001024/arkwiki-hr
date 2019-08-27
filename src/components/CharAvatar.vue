@@ -72,7 +72,7 @@ export default class CharAvatar extends Vue {
     return wikiImageUrl(this.phases[num]);
   }
   get phases() {
-    return this.char.pic.map(v => v.replace('.png', '_p.png'));
+    return this.char.pic.map(v => v.replace('.png', '_a.png'));
   }
   phaseLoop() {
     if (this.phase + 1 < this.char.pic.length) this.phase++;
@@ -96,6 +96,7 @@ export default class CharAvatar extends Vue {
     height: 100%;
     border: 10px solid #fff;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.6), 0 2px 4px rgba(0, 0, 0, 0.6) inset;
+    box-sizing: border-box;
   }
   .char-header {
     margin: 2px 0 0 2px;
@@ -131,7 +132,6 @@ export default class CharAvatar extends Vue {
     img {
       position: absolute;
       width: 100%;
-      margin-top: 30px;
       pointer-events: none;
     }
   }
